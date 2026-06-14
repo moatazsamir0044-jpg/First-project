@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "browse": "Browse Nests",
+    "howItWorks": "How It Works",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "listProperty": "List Your Property",
+    "findNest": "Find a Nest",
+    "language": "عربي"
+  },
+  "hero": {
+    "badge": "500+ verified properties across Egypt",
+    "heading": "Your Home Away From Home in Egypt",
+    "subheading": "Discover fully-furnished apartments and chalets in New Cairo, North Coast, El Gouna & Sheikh Zayed. No surprises. No hidden fees. Just your perfect nest.",
+    "stats": {
+      "properties": "Properties",
+      "destinations": "Destinations",
+      "avgRating": "Avg Rating",
+      "support": "Support"
+    }
+  },
+  "search": {
+    "destination": "Destination",
+    "allEgypt": "All Egypt",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "Guests",
+    "cta": "Find Your Nest",
+    "locations": {
+      "newCairo": "New Cairo",
+      "northCoast": "North Coast",
+      "elGouna": "El Gouna",
+      "sheikhZayed": "Sheikh Zayed"
+    }
+  },
+  "listings": {
+    "featured": {
+      "subtitle": "Curated for you",
+      "title": "Top Picks This Week",
+      "viewAll": "View All Nests"
+    },
+    "card": {
+      "studio": "Studio",
+      "bedroom": "BR",
+      "upTo": "Up to",
+      "perNight": "/ night",
+      "estUtilities": "est. utilities",
+      "view": "View →"
+    },
+    "filters": {
+      "title": "Filters",
+      "bedrooms": "Bedrooms",
+      "any": "Any",
+      "priceRange": "Price per Night (EGP)",
+      "amenities": "Amenities",
+      "cancellation": "Cancellation Policy",
+      "clearAll": "Clear All",
+      "apply": "Apply Filters"
+    },
+    "sort": {
+      "label": "Sort by:",
+      "popular": "Most Popular",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "rating": "Top Rated",
+      "newest": "Newest"
+    },
+    "results": "Showing {count} of {total} properties",
+    "noResults": {
+      "title": "No properties found",
+      "description": "Try adjusting your filters to see more results.",
+      "cta": "View All Properties"
+    }
+  },
+  "refund": {
+    "flexible": "Free cancellation",
+    "moderate": "Moderate refund",
+    "nonRefundable": "Non-refundable"
+  },
+  "amenities": {
+    "pool": "Pool",
+    "gym": "Gym",
+    "parking": "Parking",
+    "wifi": "WiFi",
+    "ac": "AC",
+    "kitchen": "Kitchen",
+    "washer": "Washer",
+    "workspace": "Workspace",
+    "bbq": "BBQ",
+    "garden": "Garden",
+    "security": "Security",
+    "beachAccess": "Beach Access"
+  },
+  "booking": {
+    "steps": {
+      "review": "Review",
+      "details": "Details",
+      "eligibility": "Eligibility",
+      "payment": "Payment"
+    },
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "Guests",
+    "nights": "nights",
+    "subtotal": "Subtotal",
+    "estUtilities": "Estimated utilities",
+    "cleaningFee": "Cleaning fee",
+    "total": "Total",
+    "reserve": "Reserve",
+    "checkAvailability": "Check Availability",
+    "notChargedYet": "You won't be charged yet",
+    "guestDetails": {
+      "title": "Guest Details",
+      "subtitle": "Please provide your details for the booking confirmation.",
+      "name": "Full Name",
+      "namePlaceholder": "As it appears on your ID",
+      "email": "Email Address",
+      "emailPlaceholder": "For booking confirmation",
+      "phone": "WhatsApp / Phone",
+      "phonePlaceholder": "+20 1xx xxx xxxx",
+      "phoneHint": "We'll send your check-in details via WhatsApp",
+      "specialRequests": "Special Requests (optional)",
+      "specialRequestsPlaceholder": "Any accessibility needs, early check-in requests, etc.",
+      "back": "Back",
+      "continue": "Continue"
+    },
+    "eligibility": {
+      "title": "Eligibility Confirmation",
+      "subtitle": "Egyptian law requires property owners to verify guest eligibility.",
+      "family": "Family",
+      "familyDesc": "Travelling with family members (married couple + children/relatives)",
+      "couple": "Couple",
+      "coupleDesc": "Married or engaged couple",
+      "individual": "Individual",
+      "individualDesc": "Solo traveller",
+      "group": "Group",
+      "groupDesc": "Friends or colleagues (may require additional verification)",
+      "notice": "Important Notice",
+      "noticeText": "You may be asked to present a valid ID and proof of relationship at check-in.",
+      "confirm": "I confirm that I meet the eligibility requirements for this property.",
+      "back": "Back",
+      "continue": "Continue to Payment"
+    },
+    "payment": {
+      "title": "Payment",
+      "totalDue": "Total due today",
+      "method": "Payment Method",
+      "card": "Card Payment",
+      "bank": "Bank Transfer",
+      "cardNumber": "Card Number",
+      "expiry": "Expiry",
+      "cvv": "CVV",
+      "nameOnCard": "Name on Card",
+      "bankDetails": "Bank Transfer Details",
+      "security": "Secured by 256-bit SSL encryption.",
+      "back": "Back",
+      "pay": "Pay"
+    },
+    "confirmed": {
+      "title": "Booking Confirmed!",
+      "subtitle": "We're so excited to host you",
+      "reference": "Booking Reference",
+      "checkIn": "Check-in",
+      "checkOut": "Check-out",
+      "totalPaid": "Total Paid",
+      "whatsNext": "What happens next?",
+      "step1": "Confirmation email sent to your inbox",
+      "step2": "Our team will WhatsApp you within 2 hours",
+      "step3": "Digital check-in guide 24h before arrival",
+      "whatsapp": "Chat on WhatsApp",
+      "browse": "Browse More Nests"
+    }
+  },
+  "howItWorks": {
+    "title": "How BirdNest Works",
+    "subtitle": "From search to stay, we've made every step effortless.",
+    "steps": {
+      "search": {
+        "title": "Search & Discover",
+        "desc": "Browse our curated collection of verified properties across Egypt."
+      },
+      "book": {
+        "title": "Book Securely",
+        "desc": "Reserve your nest in minutes. Pay securely via card or bank transfer."
+      },
+      "checkIn": {
+        "title": "Check In Smoothly",
+        "desc": "Receive your digital keys and welcome guide."
+      },
+      "support": {
+        "title": "24/7 Local Support",
+        "desc": "Our Egypt-based team is available around the clock."
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Egypt's most trusted platform for verified holiday homes.",
+    "explore": "Explore",
+    "company": "Company",
+    "contact": "Get in Touch",
+    "about": "About BirdNest",
+    "howItWorks": "How It Works",
+    "blog": "Blog & Guides",
+    "listProperty": "List Your Property",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookie Policy",
+    "copyright": "BirdNest. All rights reserved. Registered in Egypt.",
+    "securePayment": "Secure Payment",
+    "replyTime": "We reply within 2 hours"
+  },
+  "cookies": {
+    "message": "We use cookies to personalise your experience and show relevant ads.",
+    "policy": "Cookie Policy",
+    "accept": "Accept All",
+    "decline": "Decline"
+  },
+  "whatsapp": {
+    "default": "Hello! I am interested in booking a property on BirdNest."
+  }
+}

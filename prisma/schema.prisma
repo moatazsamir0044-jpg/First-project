@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model Listing {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  title         String
+  titleAr       String
+  description   String
+  descriptionAr String
+  location      String
+  area          String
+  city          String
+  pricePerNight Int
+  utilitiesEst  Int
+  cleaningFee   Int
+  bedrooms      Int
+  bathrooms     Int
+  maxGuests     Int
+  amenities     String[]
+  images        String[]
+  rating        Float     @default(0)
+  reviewCount   Int       @default(0)
+  refundPolicy  String
+  eligibility   String
+  isActive      Boolean   @default(true)
+  lastBooked    DateTime?
+  viewCount     Int       @default(0)
+  latitude      Float?
+  longitude     Float?
+  createdAt     DateTime  @default(now())
+  bookings      Booking[]
+  reviews       Review[]
+}
+
+model Booking {
+  id              String   @id @default(cuid())
+  reference       String   @unique
+  listingId       String
+  listing         Listing  @relation(fields: [listingId], references: [id])
+  guestName       String
+  guestEmail      String
+  guestPhone      String
+  checkIn         DateTime
+  checkOut        DateTime
+  guests          Int
+  totalPrice      Int
+  status          String   @default("pending")
+  stripePaymentId String?
+  eligibilityType String
+  specialRequests String?
+  createdAt       DateTime @default(now())
+}
+
+model Review {
+  id            String   @id @default(cuid())
+  listingId     String
+  listing       Listing  @relation(fields: [listingId], references: [id])
+  authorName    String
+  authorCountry String
+  rating        Float
+  comment       String
+  source        String   @default("BirdNest")
+  createdAt     DateTime @default(now())
+}
+
+model ContactSubmission {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  enquiryType String
+  message     String
+  createdAt   DateTime @default(now())
+}

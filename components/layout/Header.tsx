@@ -1,34 +1,36 @@
 'use client'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
-import { usePathname, useRouter } from 'next/navigation'
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const pathname = usePathname()
-  const router = useRouter()
+  const [isArabic, setIsArabic] = useState(false)
 
-  const isArabic = pathname.startsWith('/ar')
+  useEffect(() => {
+    const saved = localStorage.getItem('bn-lang')
+    if (saved === 'ar') {
+      setIsArabic(true)
+      document.documentElement.setAttribute('dir', 'rtl')
+      document.documentElement.setAttribute('lang', 'ar')
+    }
+  }, [])
 
   const toggleLanguage = () => {
-    if (isArabic) {
-      // Switch to English: strip /ar prefix
-      const enPath = pathname.replace(/^\/ar/, '') || '/'
-      router.push(enPath)
-    } else {
-      // Switch to Arabic: add /ar prefix
-      router.push('/ar' + pathname)
-    }
+    const next = !isArabic
+    setIsArabic(next)
+    localStorage.setItem('bn-lang', next ? 'ar' : 'en')
+    document.documentElement.setAttribute('dir', next ? 'rtl' : 'ltr')
+    document.documentElement.setAttribute('lang', next ? 'ar' : 'en')
   }
 
   const navLinks = isArabic
     ? [
-        { href: '/ar/listings', label: 'تصفح العقارات' },
-        { href: '/ar/how-it-works', label: 'كيف يعمل' },
-        { href: '/ar/blog', label: 'المدونة' },
-        { href: '/ar/about', label: 'من نحن' },
-        { href: '/ar/contact', label: 'تواصل معنا' },
+        { href: '/listings', label: 'تصفح العقارات' },
+        { href: '/how-it-works', label: 'كيف يعمل' },
+        { href: '/blog', label: 'المدونة' },
+        { href: '/about', label: 'من نحن' },
+        { href: '/contact', label: 'تواصل معنا' },
       ]
     : [
         { href: '/listings', label: 'Browse Nests' },
@@ -39,10 +41,10 @@ export default function Header() {
       ]
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm" dir={isArabic ? 'rtl' : 'ltr'}>
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
       <div className="container-site flex items-center justify-between h-16">
         {/* Logo */}
-        <Link href={isArabic ? '/ar' : '/'} className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="group-hover:scale-105 transition-transform">
             <circle cx="16" cy="16" r="16" fill="#f4603d"/>
             <path d="M16 8C12 8 9 11 9 14.5C9 17.5 11 19.5 13 21L16 24L19 21C21 19.5 23 17.5 23 14.5C23 11 20 8 16 8Z" fill="white"/>
@@ -70,10 +72,10 @@ export default function Header() {
           >
             {isArabic ? 'EN' : 'عربي'}
           </button>
-          <Link href={isArabic ? '/ar/contact?type=list' : '/contact?type=list'} className="text-sm font-semibold text-[#237c58] hover:text-[#1b6044] transition-colors">
+          <Link href="/contact?type=list" className="text-sm font-semibold text-[#237c58] hover:text-[#1b6044] transition-colors">
             {isArabic ? 'أضف عقارك' : 'List Your Property'}
           </Link>
-          <Link href={isArabic ? '/ar/listings' : '/listings'} className="bg-[#f4603d] text-white text-sm font-semibold px-4 py-2 rounded-[12px] hover:bg-[#dd4f2e] transition-colors">
+          <Link href="/listings" className="bg-[#f4603d] text-white text-sm font-semibold px-4 py-2 rounded-[12px] hover:bg-[#dd4f2e] transition-colors">
             {isArabic ? 'ابحث عن عشك' : 'Find a Nest'}
           </Link>
         </div>
@@ -96,7 +98,7 @@ export default function Header() {
             <button onClick={toggleLanguage} className="text-sm font-medium text-[#292a2b]/60 px-3 py-1.5 border border-gray-200 rounded-full">
               {isArabic ? 'EN' : 'عربي'}
             </button>
-            <Link href={isArabic ? '/ar/contact?type=list' : '/contact?type=list'} className="text-sm font-semibold text-[#237c58]" onClick={() => setMobileOpen(false)}>
+            <Link href="/contact?type=list" className="text-sm font-semibold text-[#237c58]" onClick={() => setMobileOpen(false)}>
               {isArabic ? 'أضف عقارك' : 'List Property'}
             </Link>
           </div>

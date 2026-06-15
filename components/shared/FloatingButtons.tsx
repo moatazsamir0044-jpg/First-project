@@ -107,7 +107,7 @@ function ChatPanel({
 export default function FloatingButtons() {
   const pathname = usePathname()
   const isBlog = pathname?.startsWith('/blog')
-  const isListings = pathname?.startsWith('/listings') || pathname?.startsWith('/book')
+  const isListings = pathname === '/' || pathname?.startsWith('/listings') || pathname?.startsWith('/book')
 
   // ── Listings chatbot state (persists for full visit) ──
   const [listingsOpen, setListingsOpen] = useState(false)

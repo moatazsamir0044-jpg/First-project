@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import WhatsAppButton from '@/components/shared/WhatsAppButton'
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', enquiryType: 'general', message: '' })

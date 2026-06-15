@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Link from 'next/link'
+import WhatsAppButton from '@/components/shared/WhatsAppButton'
 
 export const metadata: Metadata = {
   title: 'How BirdNest Works – Book with Confidence',

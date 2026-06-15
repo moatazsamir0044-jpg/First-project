@@ -22,10 +22,17 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
   const [wishlisted, setWishlisted] = useState(false)
   const [imgIdx, setImgIdx] = useState(0)
 
+  const params = new URLSearchParams()
+  if (checkIn) params.set('checkIn', checkIn)
+  if (checkOut) params.set('checkOut', checkOut)
+  if (guests && guests > 1) params.set('guests', String(guests))
+  const paramStr = params.toString()
+  const listingHref = `/listings/${listing.slug}${paramStr ? `?${paramStr}` : ''}`
+
   return (
-    <div className={clsx('group bg-white rounded-card overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300', className)}>
+    <div className={clsx('group bg-white rounded-card overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300', className)}>
       {/* Image */}
-      <Link href={`/listings/${listing.slug}`} className="block relative aspect-[4/3] overflow-hidden">
+      <Link href={listingHref} className="block relative aspect-[4/3] overflow-hidden">
         <Image
           src={listing.images[imgIdx] || listing.images[0]}
           alt={listing.title}
@@ -73,7 +80,7 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
         </div>
 
         {/* Title */}
-        <Link href={`/listings/${listing.slug}`}>
+        <Link href={listingHref}>
           <h3 className="font-heading text-base font-semibold text-ink mb-2 line-clamp-2 group-hover:text-orange transition-colors">
             {listing.title}
           </h3>
@@ -112,7 +119,7 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
             )}
           </div>
           <Link
-            href={`/listings/${listing.slug}`}
+            href={listingHref}
             className="text-xs font-semibold text-orange hover:text-orange-dk transition-colors"
           >
             View →

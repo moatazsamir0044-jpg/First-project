@@ -55,8 +55,8 @@ function ListingsContent() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50">
-        <div className="bg-white border-b border-gray-100 py-6">
+      <main className="min-h-screen bg-[#efe8e1]">
+        <div className="bg-white border-b border-[#e6dbcf] py-6">
           <div className="container-site">
             <h1 className="font-heading text-3xl text-[#292a2b] mb-1">Apartments &amp; Holiday Homes in Egypt</h1>
             <p className="text-[#292a2b]/60 text-sm">

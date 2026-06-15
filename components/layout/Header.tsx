@@ -1,12 +1,20 @@
 'use client'
 import Link from 'next/link'
-import { useState } from 'react'
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
 import { useLang } from '@/lib/language-context'
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const { isArabic, toggleLang } = useLang()
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const navLinks = isArabic
     ? [
@@ -25,22 +33,15 @@ export default function Header() {
       ]
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
+    <header className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-white/95 backdrop-blur-sm'} border-b border-gray-100`}>
       <div className="container-site flex items-center justify-between h-16">
-        <Link href="/" className="flex items-center gap-2 group">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="group-hover:scale-105 transition-transform">
-            <circle cx="16" cy="16" r="16" fill="#f4603d"/>
-            <path d="M16 8C12 8 9 11 9 14.5C9 17.5 11 19.5 13 21L16 24L19 21C21 19.5 23 17.5 23 14.5C23 11 20 8 16 8Z" fill="white"/>
-            <circle cx="16" cy="13" r="2.5" fill="#f4603d"/>
-            <path d="M13 20C13 20 10 17 9.5 15.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-            <path d="M19 20C19 20 22 17 22.5 15.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-          <span className="font-heading text-xl font-semibold text-[#292a2b]">BirdNest</span>
+        <Link href="/" className="flex items-center">
+          <Image src="/images/logos/logo-dark.png" alt="BirdNest" width={140} height={36} className="h-9 w-auto" priority />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
           {navLinks.map(link => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-[#292a2b]/70 hover:text-[#f4603d] transition-colors">
+            <Link key={link.href} href={link.href} className="text-sm font-medium text-[#292a2b]/70 hover:text-[#f4603d] transition-colors font-body">
               {link.label}
             </Link>
           ))}
@@ -74,6 +75,9 @@ export default function Header() {
             <button onClick={toggleLang} className="text-sm font-medium text-[#292a2b]/60 px-3 py-1.5 border border-gray-200 rounded-full">
               {isArabic ? 'EN' : 'عربي'}
             </button>
+            <Link href="/listings" className="bg-[#f4603d] text-white text-sm font-semibold px-4 py-2 rounded-[12px] hover:bg-[#dd4f2e] transition-colors" onClick={() => setMobileOpen(false)}>
+              {isArabic ? 'ابحث' : 'Find a Nest'}
+            </Link>
           </div>
         </div>
       )}

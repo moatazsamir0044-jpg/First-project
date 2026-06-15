@@ -17,6 +17,7 @@ interface GuestDetails {
   name: string
   email: string
   phone: string
+  nationality: string
   specialRequests: string
 }
 
@@ -49,7 +50,7 @@ function BookingFlow({ slug }: { slug: string }) {
         <div className="bg-white rounded-[16px] shadow-sm p-6 md:p-8">
           {step === 1 && <StepReview listing={listing} checkIn={checkIn} checkOut={checkOut} guests={guests} onNext={() => setStep(2)} />}
           {step === 2 && <StepDetails onNext={(details) => { setGuestDetails(details); setStep(3) }} onBack={() => setStep(1)} initial={guestDetails || undefined} />}
-          {step === 3 && <StepEligibility eligibility={listing.eligibility} onNext={(type) => { setEligibilityType(type); setStep(4) }} onBack={() => setStep(2)} />}
+          {step === 3 && <StepEligibility eligibility={listing.eligibility} nationality={guestDetails?.nationality || ''} onNext={(type) => { setEligibilityType(type); setStep(4) }} onBack={() => setStep(2)} />}
           {step === 4 && <StepPayment listing={listing} total={total} onBack={() => setStep(3)} onComplete={() => setStep(5)} />}
           {step === 5 && (
             <BookingConfirmed

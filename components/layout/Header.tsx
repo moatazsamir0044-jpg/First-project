@@ -41,7 +41,7 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-6">
           {navLinks.map(link => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-[#292a2b]/70 hover:text-[#f4603d] transition-colors">
+            <Link key={link.href} href={link.href} className="text-sm font-medium text-[#292a2b]/70 hover:text-[#f4603d] transition-colors font-body">
               {link.label}
             </Link>
           ))}

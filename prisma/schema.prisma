@@ -97,7 +97,6 @@ model Booking {
   totalPrice      Int
   status          String   @default("pending")
   stripePaymentId String?
-  nationality     String   @default("")
   eligibilityType String
   specialRequests String?
   createdAt       DateTime @default(now())

@@ -13,9 +13,12 @@ import { formatPrice } from '@/lib/formatters'
 interface ListingCardProps {
   listing: Listing
   className?: string
+  checkIn?: string
+  checkOut?: string
+  guests?: number
 }
 
-export default function ListingCard({ listing, className }: ListingCardProps) {
+export default function ListingCard({ listing, className, checkIn, checkOut, guests }: ListingCardProps) {
   const [wishlisted, setWishlisted] = useState(false)
   const [imgIdx, setImgIdx] = useState(0)
 

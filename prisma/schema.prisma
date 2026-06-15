@@ -90,6 +90,7 @@ model Booking {
   guestName       String
   guestEmail      String
   guestPhone      String
+  nationality     String   @default("")
   checkIn         DateTime
   checkOut        DateTime
   guests          Int

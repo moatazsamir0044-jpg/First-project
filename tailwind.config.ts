@@ -6,6 +6,7 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './content/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -17,8 +18,9 @@ const config: Config = {
         sky: '#c9e1ea',
       },
       fontFamily: {
-        heading: ['Recoleta', 'system-ui', 'sans-serif'],
+        heading: ['Recoleta', 'Georgia', 'serif'],
         body: ['Gilroy', 'system-ui', 'sans-serif'],
+        sans: ['Gilroy', 'system-ui', 'sans-serif'],
       },
       maxWidth: { site: '1240px' },
       borderRadius: {

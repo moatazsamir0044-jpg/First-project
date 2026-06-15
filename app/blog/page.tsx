@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import WhatsAppButton from '@/components/shared/WhatsAppButton'
+import BlogChatbot from '@/components/blog/BlogChatbot'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -57,7 +58,7 @@ export default function BlogPage() {
       <main>
         <section className="bg-cream py-16">
           <div className="container-site text-center">
-            <h1 className="font-heading text-4xl font-semibold text-ink mb-4">Blog & Guides</h1>
+            <h1 className="font-heading text-4xl font-semibold text-ink mb-4">Blog &amp; Guides</h1>
             <p className="text-ink/60 max-w-xl mx-auto">Destination guides, insider tips, and everything you need to plan the perfect Egypt getaway.</p>
           </div>
         </section>
@@ -98,6 +99,7 @@ export default function BlogPage() {
       </main>
       <Footer />
       <WhatsAppButton variant="fab" />
+      <BlogChatbot />
     </>
   )
 }

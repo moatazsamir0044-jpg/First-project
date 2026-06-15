@@ -1,84 +1,95 @@
 'use client'
 import { useState } from 'react'
+import { isArabNational, ELIGIBILITY_POLICY, VISITS_POLICY } from '@/lib/policies'
 
-interface StepEligibilityProps {
+interface Props {
   eligibility: string
+  nationality: string
   onNext: (type: string) => void
   onBack: () => void
 }
 
-const ELIGIBILITY_OPTIONS = [
-  { value: 'family', label: 'Family', description: 'Travelling with family members (married couple + children/relatives)' },
-  { value: 'couple', label: 'Couple', description: 'Married or engaged couple' },
-  { value: 'individual', label: 'Individual', description: 'Solo traveller' },
-  { value: 'group', label: 'Group', description: 'Friends or colleagues (may require additional verification)' },
-]
+export default function StepEligibility({ eligibility, nationality, onNext, onBack }: Props) {
+  const [stayType, setStayType] = useState('')
+  const [confirmed, setConfirmed] = useState(false)
+  const arabNational = isArabNational(nationality)
 
-export default function StepEligibility({ eligibility, onNext, onBack }: StepEligibilityProps) {
-  const [selected, setSelected] = useState('')
-  const [agreed, setAgreed] = useState(false)
-  const [error, setError] = useState('')
-
-  const handleNext = () => {
-    if (!selected) { setError('Please select your group type'); return }
-    if (!agreed) { setError('Please confirm you meet the property requirements'); return }
-    setError('')
-    onNext(selected)
-  }
+  const stayTypes = [
+    { value: 'couple', label: 'Married Couple' },
+    { value: 'family', label: 'Family' },
+    { value: 'single', label: 'Single Traveller' },
+    { value: 'corporate', label: 'Corporate Guest' },
+  ]
 
   return (
-    <div className="space-y-5">
-      <h2 className="font-heading text-xl font-semibold text-ink">Eligibility Confirmation</h2>
-      <p className="text-sm text-ink/60">
-        Egyptian law requires property owners to verify guest eligibility. Please select your group type.
-      </p>
+    <div>
+      <h2 className="font-heading text-2xl text-[#292a2b] mb-2">Who Is Staying?</h2>
+      <p className="text-[#292a2b]/60 text-sm mb-6">Please confirm who will be staying at this property.</p>
 
-      <div className="space-y-3">
-        {ELIGIBILITY_OPTIONS.map(opt => (
-          <label
-            key={opt.value}
-            className={`flex items-start gap-3 p-4 rounded-card border-2 cursor-pointer transition-colors ${
-              selected === opt.value ? 'border-orange bg-orange/5' : 'border-gray-200 hover:border-orange/40'
+      {/* Nationality-based eligibility notice */}
+      <div className={`p-4 rounded-[12px] mb-6 border ${arabNational ? 'bg-orange-50 border-orange-200' : 'bg-green-50 border-green-200'}`}>
+        <div className="flex items-start gap-3">
+          <span className="text-xl">{arabNational ? '⚠️' : '✅'}</span>
+          <div>
+            <p className="text-sm font-semibold text-[#292a2b] mb-1">
+              {arabNational ? 'Arab National — Marriage Certificate Required' : 'Non-Arab National — No Certificate Required'}
+            </p>
+            <p className="text-sm text-[#292a2b]/70">
+              {arabNational ? ELIGIBILITY_POLICY.arabNational : ELIGIBILITY_POLICY.nonArab}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Visits policy */}
+      {arabNational && (
+        <div className="p-4 rounded-[12px] bg-blue-50 border border-blue-100 mb-6">
+          <p className="text-xs font-semibold text-[#292a2b]/50 uppercase tracking-wider mb-1">Visits Policy</p>
+          <p className="text-sm text-[#292a2b]/70">{VISITS_POLICY}</p>
+        </div>
+      )}
+
+      {/* Stay type */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        {stayTypes.map(type => (
+          <button
+            key={type.value}
+            onClick={() => setStayType(type.value)}
+            className={`p-4 rounded-[12px] border-2 text-sm font-semibold transition-all text-left ${
+              stayType === type.value
+                ? 'border-[#f4603d] bg-orange-50 text-[#f4603d]'
+                : 'border-gray-200 text-[#292a2b] hover:border-gray-300'
             }`}
           >
-            <input
-              type="radio"
-              name="eligibility"
-              value={opt.value}
-              checked={selected === opt.value}
-              onChange={() => { setSelected(opt.value); setError('') }}
-              className="mt-0.5 text-orange focus:ring-orange"
-            />
-            <div>
-              <p className="font-semibold text-sm text-ink">{opt.label}</p>
-              <p className="text-xs text-ink/60 mt-0.5">{opt.description}</p>
-            </div>
-          </label>
+            {type.label}
+          </button>
         ))}
       </div>
 
-      <div className="p-4 bg-sky/40 rounded-card text-sm text-ink/70 leading-relaxed">
-        <p className="font-semibold text-ink mb-1">Important Notice</p>
-        <p>You may be asked to present a valid ID and proof of relationship at check-in. Misrepresentation may result in cancellation without refund.</p>
-      </div>
-
-      <label className="flex items-start gap-3 cursor-pointer">
+      {/* Confirmation checkbox */}
+      <label className="flex items-start gap-3 cursor-pointer mb-8">
         <input
           type="checkbox"
-          checked={agreed}
-          onChange={e => { setAgreed(e.target.checked); setError('') }}
-          className="mt-0.5 rounded text-orange focus:ring-orange"
+          checked={confirmed}
+          onChange={e => setConfirmed(e.target.checked)}
+          className="mt-0.5 accent-[#f4603d]"
         />
-        <span className="text-sm text-ink/70">
-          I confirm that I meet the eligibility requirements for this property and agree to present valid identification upon request.
+        <span className="text-sm text-[#292a2b]/70 leading-relaxed">
+          I confirm that I meet the eligibility requirements for this property and understand that documentation may be requested at check-in.
         </span>
       </label>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      <div className="flex gap-3 pt-2">
-        <button onClick={onBack} className="flex-1 border border-gray-200 text-sm font-medium text-ink py-3 rounded-btn hover:bg-gray-50 transition-colors">Back</button>
-        <button onClick={handleNext} className="flex-1 bg-orange text-white text-sm font-semibold py-3 rounded-btn hover:bg-orange-dk transition-colors">Continue to Payment</button>
+      <div className="flex gap-3">
+        <button onClick={onBack} className="flex-1 border border-gray-200 text-[#292a2b] font-semibold py-3.5 rounded-[12px] hover:bg-gray-50 transition-colors">
+          Back
+        </button>
+        <button
+          onClick={() => stayType && confirmed && onNext(stayType)}
+          disabled={!stayType || !confirmed}
+          className="flex-1 bg-[#f4603d] hover:bg-[#dd4f2e] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-[12px] transition-colors"
+        >
+          Continue
+        </button>
       </div>
     </div>
   )

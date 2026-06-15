@@ -1,33 +1,43 @@
 'use client'
 import { useState } from 'react'
+import { ALL_COUNTRIES } from '@/lib/countries'
 
 interface GuestDetails {
   name: string
   email: string
   phone: string
+  nationality: string
   specialRequests: string
 }
 
-interface StepDetailsProps {
+interface Props {
   onNext: (details: GuestDetails) => void
   onBack: () => void
   initial?: Partial<GuestDetails>
 }
 
-export default function StepDetails({ onNext, onBack, initial = {} }: StepDetailsProps) {
+export default function StepDetails({ onNext, onBack, initial }: Props) {
   const [form, setForm] = useState<GuestDetails>({
-    name: initial.name || '',
-    email: initial.email || '',
-    phone: initial.phone || '',
-    specialRequests: initial.specialRequests || '',
+    name: initial?.name || '',
+    email: initial?.email || '',
+    phone: initial?.phone || '',
+    nationality: initial?.nationality || '',
+    specialRequests: initial?.specialRequests || '',
   })
   const [errors, setErrors] = useState<Partial<GuestDetails>>({})
+  const [countrySearch, setCountrySearch] = useState('')
+  const [showCountryList, setShowCountryList] = useState(false)
+
+  const filteredCountries = ALL_COUNTRIES.filter(c =>
+    c.toLowerCase().includes(countrySearch.toLowerCase())
+  )
 
   const validate = () => {
     const e: Partial<GuestDetails> = {}
-    if (!form.name.trim()) e.name = 'Full name is required'
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = 'Valid email is required'
+    if (!form.name.trim()) e.name = 'Name is required'
+    if (!form.email.includes('@')) e.email = 'Valid email required'
     if (!form.phone.trim()) e.phone = 'Phone number is required'
+    if (!form.nationality) e.nationality = 'Nationality is required'
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -36,73 +46,106 @@ export default function StepDetails({ onNext, onBack, initial = {} }: StepDetail
     if (validate()) onNext(form)
   }
 
-  const inputClass = (field: keyof GuestDetails) =>
-    `w-full border ${errors[field] ? 'border-red-400' : 'border-gray-200'} rounded-btn px-4 py-3 text-sm outline-none focus:border-orange transition-colors`
-
   return (
-    <div className="space-y-5">
-      <h2 className="font-heading text-xl font-semibold text-ink">Guest Details</h2>
-      <p className="text-sm text-ink/60">Please provide your details for the booking confirmation.</p>
+    <div>
+      <h2 className="font-heading text-2xl text-[#292a2b] mb-6">Your Details</h2>
+      <div className="space-y-4">
+        {/* Name */}
+        <div>
+          <label className="block text-sm font-semibold text-[#292a2b] mb-1.5">Full Name *</label>
+          <input
+            type="text"
+            value={form.name}
+            onChange={e => setForm({ ...form, name: e.target.value })}
+            placeholder="As on your ID"
+            className={`w-full border ${errors.name ? 'border-red-400' : 'border-gray-200'} rounded-[10px] px-4 py-3 text-sm outline-none focus:border-[#f4603d] transition-colors`}
+          />
+          {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+        </div>
 
-      <div>
-        <label className="block text-sm font-medium text-ink mb-1.5">Full Name *</label>
-        <input
-          type="text"
-          value={form.name}
-          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-          placeholder="As it appears on your ID"
-          className={inputClass('name')}
-        />
-        {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
+        {/* Email */}
+        <div>
+          <label className="block text-sm font-semibold text-[#292a2b] mb-1.5">Email Address *</label>
+          <input
+            type="email"
+            value={form.email}
+            onChange={e => setForm({ ...form, email: e.target.value })}
+            placeholder="you@example.com"
+            className={`w-full border ${errors.email ? 'border-red-400' : 'border-gray-200'} rounded-[10px] px-4 py-3 text-sm outline-none focus:border-[#f4603d] transition-colors`}
+          />
+          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label className="block text-sm font-semibold text-[#292a2b] mb-1.5">Phone Number (WhatsApp) *</label>
+          <input
+            type="tel"
+            value={form.phone}
+            onChange={e => setForm({ ...form, phone: e.target.value })}
+            placeholder="+20 100 000 0000"
+            className={`w-full border ${errors.phone ? 'border-red-400' : 'border-gray-200'} rounded-[10px] px-4 py-3 text-sm outline-none focus:border-[#f4603d] transition-colors`}
+          />
+          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+        </div>
+
+        {/* Nationality */}
+        <div className="relative">
+          <label className="block text-sm font-semibold text-[#292a2b] mb-1.5">Nationality *</label>
+          <input
+            type="text"
+            value={form.nationality || countrySearch}
+            onChange={e => {
+              setCountrySearch(e.target.value)
+              setForm({ ...form, nationality: '' })
+              setShowCountryList(true)
+            }}
+            onFocus={() => setShowCountryList(true)}
+            placeholder="Select your nationality"
+            className={`w-full border ${errors.nationality ? 'border-red-400' : 'border-gray-200'} rounded-[10px] px-4 py-3 text-sm outline-none focus:border-[#f4603d] transition-colors`}
+            readOnly={!!form.nationality}
+          />
+          {form.nationality && (
+            <button onClick={() => { setForm({ ...form, nationality: '' }); setCountrySearch(''); setShowCountryList(false) }} className="absolute right-3 top-10 text-gray-400 hover:text-gray-600">✕</button>
+          )}
+          {errors.nationality && <p className="text-red-500 text-xs mt-1">{errors.nationality}</p>}
+          {showCountryList && !form.nationality && (
+            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-[10px] shadow-lg max-h-48 overflow-y-auto">
+              {filteredCountries.length === 0 ? (
+                <div className="px-4 py-3 text-sm text-gray-500">No countries found</div>
+              ) : (
+                filteredCountries.map(country => (
+                  <button
+                    key={country}
+                    onClick={() => { setForm({ ...form, nationality: country }); setCountrySearch(country); setShowCountryList(false) }}
+                    className="w-full text-left px-4 py-2.5 text-sm text-[#292a2b] hover:bg-[#efe8e1] transition-colors"
+                  >
+                    {country}
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Special requests */}
+        <div>
+          <label className="block text-sm font-semibold text-[#292a2b] mb-1.5">Special Requests <span className="font-normal text-[#292a2b]/40">(optional)</span></label>
+          <textarea
+            value={form.specialRequests}
+            onChange={e => setForm({ ...form, specialRequests: e.target.value })}
+            placeholder="Any special requirements, early check-in requests, etc."
+            rows={3}
+            className="w-full border border-gray-200 rounded-[10px] px-4 py-3 text-sm outline-none focus:border-[#f4603d] transition-colors resize-none"
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-ink mb-1.5">Email Address *</label>
-        <input
-          type="email"
-          value={form.email}
-          onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-          placeholder="For booking confirmation"
-          className={inputClass('email')}
-        />
-        {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-ink mb-1.5">WhatsApp / Phone *</label>
-        <input
-          type="tel"
-          value={form.phone}
-          onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-          placeholder="+20 1xx xxx xxxx"
-          className={inputClass('phone')}
-        />
-        {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone}</p>}
-        <p className="text-xs text-ink/40 mt-1">We'll send your check-in details via WhatsApp</p>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-ink mb-1.5">Special Requests (optional)</label>
-        <textarea
-          value={form.specialRequests}
-          onChange={e => setForm(f => ({ ...f, specialRequests: e.target.value }))}
-          placeholder="Any accessibility needs, early check-in requests, etc."
-          rows={3}
-          className="w-full border border-gray-200 rounded-btn px-4 py-3 text-sm outline-none focus:border-orange transition-colors resize-none"
-        />
-      </div>
-
-      <div className="flex gap-3 pt-2">
-        <button
-          onClick={onBack}
-          className="flex-1 border border-gray-200 text-sm font-medium text-ink py-3 rounded-btn hover:bg-gray-50 transition-colors"
-        >
+      <div className="mt-8 flex gap-3">
+        <button onClick={onBack} className="flex-1 border border-gray-200 text-[#292a2b] font-semibold py-3.5 rounded-[12px] hover:bg-gray-50 transition-colors">
           Back
         </button>
-        <button
-          onClick={handleSubmit}
-          className="flex-1 bg-orange text-white text-sm font-semibold py-3 rounded-btn hover:bg-orange-dk transition-colors"
-        >
+        <button onClick={handleSubmit} className="flex-2 flex-1 bg-[#f4603d] hover:bg-[#dd4f2e] text-white font-semibold py-3.5 rounded-[12px] transition-colors">
           Continue
         </button>
       </div>

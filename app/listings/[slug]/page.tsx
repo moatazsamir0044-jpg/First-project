@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -127,7 +128,9 @@ export default function ListingDetailPage({ params }: { params: { slug: string }
 
             {/* Booking widget */}
             <div className="lg:w-80 xl:w-96 shrink-0">
-              <BookingWidget listing={listing} />
+              <Suspense fallback={<div className="bg-white rounded-card border border-gray-200 shadow-lg p-6 h-96 animate-pulse" />}>
+                <BookingWidget listing={listing} />
+              </Suspense>
             </div>
           </div>
 

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Calendar, Users, Star } from 'lucide-react'
 import { type Listing } from '@/lib/mock-data'
@@ -12,10 +13,11 @@ interface BookingWidgetProps {
 }
 
 export default function BookingWidget({ listing }: BookingWidgetProps) {
+  const searchParams = useSearchParams()
   const today = new Date().toISOString().split('T')[0]
-  const [checkIn, setCheckIn] = useState('')
-  const [checkOut, setCheckOut] = useState('')
-  const [guests, setGuests] = useState(2)
+  const [checkIn, setCheckIn] = useState(searchParams.get('checkIn') || '')
+  const [checkOut, setCheckOut] = useState(searchParams.get('checkOut') || '')
+  const [guests, setGuests] = useState(Number(searchParams.get('guests') || '2'))
 
   const nights = checkIn && checkOut ? calculateNights(new Date(checkIn), new Date(checkOut)) : 0
   const subtotal = nights * listing.pricePerNight

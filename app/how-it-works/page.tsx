@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import WhatsAppButton from '@/components/shared/WhatsAppButton'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -130,7 +129,6 @@ export default function HowItWorksPage() {
         </section>
       </main>
       <Footer />
-      <WhatsAppButton variant="fab" />
     </>
   )
 }

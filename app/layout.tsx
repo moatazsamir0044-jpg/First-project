@@ -3,6 +3,7 @@ import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { LanguageProvider } from '@/lib/language-context'
+import FloatingButtons from '@/components/shared/FloatingButtons'
 
 export const metadata: Metadata = {
   title: 'BirdNest – Serviced Apartments & Holiday Homes in Cairo, Sahel & El Gouna',
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <LanguageProvider>
           {children}
+          <FloatingButtons />
         </LanguageProvider>
         <Analytics />
         <SpeedInsights />

@@ -3,7 +3,10 @@ import Anthropic from '@anthropic-ai/sdk'
 import { mockListings } from '@/lib/mock-data'
 
 export async function POST(req: NextRequest) {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || '' })
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ message: "Nesty is not configured yet. Please contact us via WhatsApp!", matchingListings: [], filters: {} })
+  }
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   try {
     const { message, conversationHistory = [] } = await req.json()
 

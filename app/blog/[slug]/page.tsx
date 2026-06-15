@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import WhatsAppButton from '@/components/shared/WhatsAppButton'
 import Link from 'next/link'
 
 const POSTS: Record<string, {
@@ -327,7 +326,6 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </div>
       </main>
       <Footer />
-      <WhatsAppButton variant="fab" />
     </>
   )
 }

@@ -9,7 +9,6 @@ import WhyBirdNest from '@/components/home/WhyBirdNest'
 import Testimonials from '@/components/home/Testimonials'
 import AppDownload from '@/components/home/AppDownload'
 import PartnerLogos from '@/components/home/PartnerLogos'
-import WhatsAppButton from '@/components/shared/WhatsAppButton'
 import TrustStrip from '@/components/home/TrustStrip'
 
 export default function HomePage() {
@@ -28,7 +27,6 @@ export default function HomePage() {
         <PartnerLogos />
       </main>
       <Footer />
-      <WhatsAppButton variant="fab" />
       <CookieConsent />
     </>
   )

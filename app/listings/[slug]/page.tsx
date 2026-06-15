@@ -3,7 +3,6 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import WhatsAppButton from '@/components/shared/WhatsAppButton'
 import PhotoGallery from '@/components/listing-detail/PhotoGallery'
 import BookingWidget from '@/components/listing-detail/BookingWidget'
 import ReviewsSection from '@/components/listing-detail/ReviewsSection'
@@ -146,7 +145,6 @@ export default function ListingDetailPage({ params }: { params: { slug: string }
         </div>
       </main>
       <Footer />
-      <WhatsAppButton variant="fab" message={`Hi! I'm interested in "${listing.title}".`} />
     </>
   )
 }

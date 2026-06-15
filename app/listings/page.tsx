@@ -4,7 +4,6 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ListingCard from '@/components/listings/ListingCard'
-import ListingsChatbot from '@/components/listings/ListingsChatbot'
 import { mockListings } from '@/lib/mock-data'
 
 const LOCATIONS = ['New Cairo', 'North Coast', 'El Gouna', 'Sheikh Zayed']
@@ -154,7 +153,6 @@ function ListingsContent() {
         </div>
       </main>
       <Footer />
-      <ListingsChatbot />
     </>
   )
 }

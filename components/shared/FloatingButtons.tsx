@@ -1,18 +1,27 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+201000000000'
 
 interface Message { role: 'user' | 'assistant'; content: string }
 interface ListingResult { id: string; slug: string; title: string; area: string; pricePerNight: number; bedrooms: number; rating: number }
+interface BlogPost { slug: string; title: string; category: string }
 
 export default function FloatingButtons() {
+  const pathname = usePathname()
+  const isBlog = pathname?.startsWith('/blog')
+
+  const WELCOME_MSG = isBlog
+    ? "Hi! I'm Nesty 🐦 What brings you to Egypt? Tell me about your trip and I'll recommend the perfect reads for you!"
+    : "Hi! I'm Nesty 🐦 Tell me what you're looking for and I'll find the perfect nest for you!"
+
   const [chatOpen, setChatOpen] = useState(false)
   const [showNotif, setShowNotif] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hi! I'm Nesty 🐦 Tell me what you're looking for and I'll find the perfect nest for you!" }
+    { role: 'assistant', content: WELCOME_MSG }
   ])
+  const [blogResults, setBlogResults] = useState<BlogPost[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<ListingResult[]>([])
@@ -35,6 +44,13 @@ export default function FloatingButtons() {
     setShowNotif(false)
   }
 
+  // Reset messages when switching between blog and non-blog pages
+  useEffect(() => {
+    setMessages([{ role: 'assistant', content: WELCOME_MSG }])
+    setResults([])
+    setBlogResults([])
+  }, [isBlog])
+
   const send = async () => {
     if (!input.trim() || loading) return
     const userMessage = input.trim()
@@ -43,14 +59,16 @@ export default function FloatingButtons() {
     setLoading(true)
     try {
       const history = messages.map(m => ({ role: m.role, content: m.content }))
-      const res = await fetch('/api/chat/listings', {
+      const endpoint = isBlog ? '/api/chat/blog' : '/api/chat/listings'
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, conversationHistory: history }),
       })
       const data = await res.json()
       setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
-      if (data.matchingListings?.length > 0) setResults(data.matchingListings)
+      if (isBlog && data.recommendedPosts?.length > 0) setBlogResults(data.recommendedPosts)
+      if (!isBlog && data.matchingListings?.length > 0) setResults(data.matchingListings)
     } catch {
       setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting. Please try again!" }])
     } finally {
@@ -106,6 +124,17 @@ export default function FloatingButtons() {
                 ))}
               </div>
             )}
+            {blogResults.length > 0 && (
+              <div className="space-y-2 mt-1">
+                <p className="text-xs font-semibold text-[#292a2b]/40 uppercase tracking-wider">Recommended Reads</p>
+                {blogResults.slice(0, 3).map(p => (
+                  <a key={p.slug} href={`/blog/${p.slug}`} className="block bg-[#efe8e1] rounded-[12px] p-3 hover:bg-[#e5d8cf] transition-colors">
+                    <p className="text-xs font-bold tracking-wider uppercase text-[#237c58] mb-0.5">{p.category}</p>
+                    <p className="font-semibold text-sm text-[#292a2b]">{p.title}</p>
+                  </a>
+                ))}
+              </div>
+            )}
             <div ref={bottomRef} />
           </div>
 
@@ -114,7 +143,7 @@ export default function FloatingButtons() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && send()}
-              placeholder="e.g. 2-bed in New Cairo with pool…"
+              placeholder={isBlog ? "e.g. I'm visiting El Gouna for a week…" : "e.g. 2-bed in New Cairo with pool…"}
               className="flex-1 text-sm border border-gray-200 rounded-[10px] px-3 py-2.5 outline-none focus:border-[#f4603d]"
             />
             <button onClick={send} disabled={loading || !input.trim()} className="bg-[#f4603d] hover:bg-[#dd4f2e] disabled:opacity-40 text-white rounded-[10px] px-3 transition-colors">

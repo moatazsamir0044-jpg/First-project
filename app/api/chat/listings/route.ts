@@ -55,7 +55,8 @@ Always respond in the same language the user writes in (Arabic or English). Be w
 
     return NextResponse.json({ message: parsed.message, matchingListings, filters: parsed.filters || {} })
   } catch (error) {
-    console.error('Chat error:', error)
-    return NextResponse.json({ message: "I'm having trouble right now. Please try again!", matchingListings: [], filters: {} })
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('Chat error:', msg)
+    return NextResponse.json({ message: `Error: ${msg}`, matchingListings: [], filters: {} })
   }
 }

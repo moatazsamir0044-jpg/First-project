@@ -34,9 +34,9 @@ export default function Header() {
 
   return (
     <header className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-white/95 backdrop-blur-sm'} border-b border-gray-100`}>
-      <div className="container-site flex items-center justify-between h-20">
+      <div className="container-site flex items-center justify-between h-24">
         <Link href="/" className="flex items-center">
-          <Image src="/images/logos/logo-dark.png" alt="BirdNest" width={260} height={68} className="h-14 w-auto" priority />
+          <Image src="/images/logos/logo-dark.png" alt="BirdNest" width={200} height={200} className="h-20 w-auto" priority />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">

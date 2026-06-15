@@ -49,6 +49,6 @@ Respond in the same language the user writes in.`
     return NextResponse.json({ message: parsed.message, recommendedPosts })
   } catch (error) {
     console.error('Blog chat error:', error)
-    return NextResponse.json({ message: "I'm having trouble right now. Please try again!", recommendedPosts: [] })
+    const msg = error instanceof Error ? error.message : String(error); return NextResponse.json({ message: `Error: ${msg}`, recommendedPosts: [] })
   }
 }

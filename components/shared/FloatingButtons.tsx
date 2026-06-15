@@ -3,191 +3,276 @@ import { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+201000000000'
+const waUrl = `https://wa.me/${WHATSAPP_NUMBER.replace(/\+/g, '')}?text=${encodeURIComponent('Hello! I am interested in booking a property on BirdNest.')}`
 
 interface Message { role: 'user' | 'assistant'; content: string }
 interface ListingResult { id: string; slug: string; title: string; area: string; pricePerNight: number; bedrooms: number; rating: number }
 interface BlogPost { slug: string; title: string; category: string }
 
+// ─── Shared chat UI ───────────────────────────────────────────────────────────
+function ChatPanel({
+  open, onClose, color, title, subtitle, messages, loading, input, setInput, onSend, listingResults, blogResults, placeholder,
+}: {
+  open: boolean; onClose: () => void; color: 'orange' | 'green'
+  title: string; subtitle: string
+  messages: Message[]; loading: boolean
+  input: string; setInput: (v: string) => void; onSend: () => void
+  listingResults: ListingResult[]; blogResults: BlogPost[]
+  placeholder: string
+}) {
+  const bottomRef = useRef<HTMLDivElement>(null)
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages, loading])
+
+  if (!open) return null
+
+  const bg = color === 'orange' ? 'bg-[#f4603d]' : 'bg-[#237c58]'
+  const border = color === 'orange' ? 'focus:border-[#f4603d]' : 'focus:border-[#237c58]'
+  const msgBg = color === 'orange' ? 'bg-[#f4603d]' : 'bg-[#237c58]'
+  const sendBg = color === 'orange' ? 'bg-[#f4603d] hover:bg-[#dd4f2e]' : 'bg-[#237c58] hover:bg-[#1b6044]'
+
+  return (
+    <div className="fixed bottom-32 right-4 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm bg-white rounded-[20px] shadow-2xl border border-gray-100 flex flex-col overflow-hidden" style={{ height: '480px' }}>
+      <div className={`${bg} text-white px-4 py-3 flex items-center justify-between shrink-0`}>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-base">🐦</div>
+          <div>
+            <p className="font-semibold text-sm">{title}</p>
+            <p className="text-xs text-white/70">{subtitle}</p>
+          </div>
+        </div>
+        <button onClick={onClose} className="text-white/70 hover:text-white text-2xl leading-none">×</button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {messages.map((m, i) => (
+          <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[82%] rounded-[14px] px-3 py-2.5 text-sm leading-relaxed ${m.role === 'user' ? `${msgBg} text-white` : 'bg-gray-100 text-[#292a2b]'}`}>
+              {m.content}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="bg-gray-100 rounded-[14px] px-3 py-2.5 text-sm text-[#292a2b]">
+              <span className="inline-flex gap-1">
+                <span className="animate-bounce" style={{ animationDelay: '0ms' }}>·</span>
+                <span className="animate-bounce" style={{ animationDelay: '150ms' }}>·</span>
+                <span className="animate-bounce" style={{ animationDelay: '300ms' }}>·</span>
+              </span>
+            </div>
+          </div>
+        )}
+        {listingResults.length > 0 && (
+          <div className="space-y-2 mt-1">
+            <p className="text-xs font-semibold text-[#292a2b]/40 uppercase tracking-wider">Matching Nests</p>
+            {listingResults.slice(0, 3).map(l => (
+              <a key={l.id} href={`/listings/${l.slug}`} className="block bg-[#efe8e1] rounded-[12px] p-3 hover:bg-[#e5d8cf] transition-colors">
+                <p className="font-semibold text-sm text-[#292a2b]">{l.title}</p>
+                <p className="text-xs text-[#292a2b]/60 mt-0.5">{l.area} · {l.bedrooms} bed · EGP {l.pricePerNight.toLocaleString()}/night · ★{l.rating}</p>
+              </a>
+            ))}
+          </div>
+        )}
+        {blogResults.length > 0 && (
+          <div className="space-y-2 mt-1">
+            <p className="text-xs font-semibold text-[#292a2b]/40 uppercase tracking-wider">Recommended Reads</p>
+            {blogResults.slice(0, 3).map(p => (
+              <a key={p.slug} href={`/blog/${p.slug}`} className="block bg-[#efe8e1] rounded-[12px] p-3 hover:bg-[#e5d8cf] transition-colors">
+                <p className="text-xs font-bold tracking-wider uppercase text-[#237c58] mb-0.5">{p.category}</p>
+                <p className="font-semibold text-sm text-[#292a2b]">{p.title}</p>
+              </a>
+            ))}
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      <div className="border-t border-gray-100 p-3 flex gap-2 shrink-0">
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && onSend()}
+          placeholder={placeholder}
+          className={`flex-1 text-sm border border-gray-200 rounded-[10px] px-3 py-2.5 outline-none ${border}`}
+        />
+        <button onClick={onSend} disabled={loading || !input.trim()} className={`${sendBg} disabled:opacity-40 text-white rounded-[10px] px-3 transition-colors`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9l20-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Main component ────────────────────────────────────────────────────────────
 export default function FloatingButtons() {
   const pathname = usePathname()
   const isBlog = pathname?.startsWith('/blog')
+  const isListings = pathname?.startsWith('/listings') || pathname?.startsWith('/book')
 
-  const WELCOME_MSG = isBlog
-    ? "Hi! I'm Nesty 🐦 What brings you to Egypt? Tell me about your trip and I'll recommend the perfect reads for you!"
-    : "Hi! I'm Nesty 🐦 Tell me what you're looking for and I'll find the perfect nest for you!"
-
-  const [chatOpen, setChatOpen] = useState(false)
-  const [showNotif, setShowNotif] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: WELCOME_MSG }
+  // ── Listings chatbot state (persists for full visit) ──
+  const [listingsOpen, setListingsOpen] = useState(false)
+  const [listingsMessages, setListingsMessages] = useState<Message[]>([
+    { role: 'assistant', content: "Hi! I'm Nesty 🐦 Tell me what you're looking for and I'll find the perfect nest for you!" }
   ])
+  const [listingsInput, setListingsInput] = useState('')
+  const [listingsLoading, setListingsLoading] = useState(false)
+  const [listingsResults, setListingsResults] = useState<ListingResult[]>([])
+  const [listingsNotif, setListingsNotif] = useState(false)
+
+  // ── Blog chatbot state (persists for full visit) ──
+  const [blogOpen, setBlogOpen] = useState(false)
+  const [blogMessages, setBlogMessages] = useState<Message[]>([
+    { role: 'assistant', content: "Hi! I'm Nesty 🐦 What brings you to Egypt? Tell me about your trip and I'll recommend the perfect reads for you!" }
+  ])
+  const [blogInput, setBlogInput] = useState('')
+  const [blogLoading, setBlogLoading] = useState(false)
   const [blogResults, setBlogResults] = useState<BlogPost[]>([])
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [results, setResults] = useState<ListingResult[]>([])
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const [blogNotif, setBlogNotif] = useState(false)
 
-  // Show notification bubble after 3 seconds if chat hasn't been opened
+  // Show notification once per section visit
   useEffect(() => {
-    const t = setTimeout(() => {
-      if (!chatOpen) setShowNotif(true)
-    }, 3000)
-    return () => clearTimeout(t)
-  }, [])
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading])
-
-  const openChat = () => {
-    setChatOpen(true)
-    setShowNotif(false)
-  }
-
-  // Reset messages when switching between blog and non-blog pages
-  useEffect(() => {
-    setMessages([{ role: 'assistant', content: WELCOME_MSG }])
-    setResults([])
-    setBlogResults([])
+    if (isBlog && blogMessages.length === 1) {
+      const t = setTimeout(() => setBlogNotif(true), 3000)
+      return () => clearTimeout(t)
+    }
   }, [isBlog])
 
-  const send = async () => {
-    if (!input.trim() || loading) return
-    const userMessage = input.trim()
-    setInput('')
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
-    setLoading(true)
+  useEffect(() => {
+    if (isListings && listingsMessages.length === 1) {
+      const t = setTimeout(() => setListingsNotif(true), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [isListings])
+
+  // ── Listings send ──
+  const sendListings = async () => {
+    if (!listingsInput.trim() || listingsLoading) return
+    const msg = listingsInput.trim()
+    setListingsInput('')
+    setListingsMessages(prev => [...prev, { role: 'user', content: msg }])
+    setListingsLoading(true)
     try {
-      const history = messages.map(m => ({ role: m.role, content: m.content }))
-      const endpoint = isBlog ? '/api/chat/blog' : '/api/chat/listings'
-      const res = await fetch(endpoint, {
+      const res = await fetch('/api/chat/listings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage, conversationHistory: history }),
+        body: JSON.stringify({ message: msg, conversationHistory: listingsMessages.map(m => ({ role: m.role, content: m.content })) }),
       })
       const data = await res.json()
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
-      if (isBlog && data.recommendedPosts?.length > 0) setBlogResults(data.recommendedPosts)
-      if (!isBlog && data.matchingListings?.length > 0) setResults(data.matchingListings)
+      setListingsMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+      if (data.matchingListings?.length > 0) setListingsResults(data.matchingListings)
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting. Please try again!" }])
+      setListingsMessages(prev => [...prev, { role: 'assistant', content: "Sorry, connection issue. Please try again!" }])
     } finally {
-      setLoading(false)
+      setListingsLoading(false)
     }
   }
 
-  const waUrl = `https://wa.me/${WHATSAPP_NUMBER.replace(/\+/g, '')}?text=${encodeURIComponent('Hello! I am interested in booking a property on BirdNest.')}`
+  // ── Blog send ──
+  const sendBlog = async () => {
+    if (!blogInput.trim() || blogLoading) return
+    const msg = blogInput.trim()
+    setBlogInput('')
+    setBlogMessages(prev => [...prev, { role: 'user', content: msg }])
+    setBlogLoading(true)
+    try {
+      const res = await fetch('/api/chat/blog', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, conversationHistory: blogMessages.map(m => ({ role: m.role, content: m.content })) }),
+      })
+      const data = await res.json()
+      setBlogMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+      if (data.recommendedPosts?.length > 0) setBlogResults(data.recommendedPosts)
+    } catch {
+      setBlogMessages(prev => [...prev, { role: 'assistant', content: "Sorry, connection issue. Please try again!" }])
+    } finally {
+      setBlogLoading(false)
+    }
+  }
+
+  // Which chatbot panel is open (only one at a time)
+  const activeChatOpen = isBlog ? blogOpen : isListings ? listingsOpen : false
 
   return (
     <>
-      {/* Chat panel */}
-      {chatOpen && (
-        <div className="fixed bottom-32 right-4 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm bg-white rounded-[20px] shadow-2xl border border-gray-100 flex flex-col overflow-hidden" style={{ height: '480px' }}>
-          <div className="bg-[#f4603d] text-white px-4 py-3 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-base">🐦</div>
-              <div>
-                <p className="font-semibold text-sm">Nesty</p>
-                <p className="text-xs text-white/70">BirdNest AI Assistant</p>
-              </div>
-            </div>
-            <button onClick={() => setChatOpen(false)} className="text-white/70 hover:text-white text-2xl leading-none">×</button>
-          </div>
+      {/* Blog chatbot panel */}
+      {isBlog && (
+        <ChatPanel
+          open={blogOpen} onClose={() => setBlogOpen(false)}
+          color="green" title="Nesty — Travel Guide" subtitle="Your Egypt blog assistant"
+          messages={blogMessages} loading={blogLoading}
+          input={blogInput} setInput={setBlogInput} onSend={sendBlog}
+          listingResults={[]} blogResults={blogResults}
+          placeholder="e.g. I'm visiting El Gouna for a week…"
+        />
+      )}
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((m, i) => (
-              <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[82%] rounded-[14px] px-3 py-2.5 text-sm leading-relaxed ${m.role === 'user' ? 'bg-[#f4603d] text-white' : 'bg-gray-100 text-[#292a2b]'}`}>
-                  {m.content}
-                </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-[14px] px-3 py-2.5 text-sm text-[#292a2b]">
-                  <span className="inline-flex gap-1">
-                    <span className="animate-bounce" style={{ animationDelay: '0ms' }}>·</span>
-                    <span className="animate-bounce" style={{ animationDelay: '150ms' }}>·</span>
-                    <span className="animate-bounce" style={{ animationDelay: '300ms' }}>·</span>
-                  </span>
-                </div>
-              </div>
-            )}
-            {results.length > 0 && (
-              <div className="space-y-2 mt-1">
-                <p className="text-xs font-semibold text-[#292a2b]/40 uppercase tracking-wider">Matching Nests</p>
-                {results.slice(0, 3).map(l => (
-                  <a key={l.id} href={`/listings/${l.slug}`} className="block bg-[#efe8e1] rounded-[12px] p-3 hover:bg-[#e5d8cf] transition-colors">
-                    <p className="font-semibold text-sm text-[#292a2b]">{l.title}</p>
-                    <p className="text-xs text-[#292a2b]/60 mt-0.5">{l.area} · {l.bedrooms} bed · EGP {l.pricePerNight.toLocaleString()}/night · ★{l.rating}</p>
-                  </a>
-                ))}
-              </div>
-            )}
-            {blogResults.length > 0 && (
-              <div className="space-y-2 mt-1">
-                <p className="text-xs font-semibold text-[#292a2b]/40 uppercase tracking-wider">Recommended Reads</p>
-                {blogResults.slice(0, 3).map(p => (
-                  <a key={p.slug} href={`/blog/${p.slug}`} className="block bg-[#efe8e1] rounded-[12px] p-3 hover:bg-[#e5d8cf] transition-colors">
-                    <p className="text-xs font-bold tracking-wider uppercase text-[#237c58] mb-0.5">{p.category}</p>
-                    <p className="font-semibold text-sm text-[#292a2b]">{p.title}</p>
-                  </a>
-                ))}
-              </div>
-            )}
-            <div ref={bottomRef} />
-          </div>
-
-          <div className="border-t border-gray-100 p-3 flex gap-2 shrink-0">
-            <input
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && send()}
-              placeholder={isBlog ? "e.g. I'm visiting El Gouna for a week…" : "e.g. 2-bed in New Cairo with pool…"}
-              className="flex-1 text-sm border border-gray-200 rounded-[10px] px-3 py-2.5 outline-none focus:border-[#f4603d]"
-            />
-            <button onClick={send} disabled={loading || !input.trim()} className="bg-[#f4603d] hover:bg-[#dd4f2e] disabled:opacity-40 text-white rounded-[10px] px-3 transition-colors">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9l20-7z"/></svg>
-            </button>
-          </div>
-        </div>
+      {/* Listings chatbot panel */}
+      {isListings && (
+        <ChatPanel
+          open={listingsOpen} onClose={() => setListingsOpen(false)}
+          color="orange" title="Nesty — Nest Finder" subtitle="BirdNest AI Assistant"
+          messages={listingsMessages} loading={listingsLoading}
+          input={listingsInput} setInput={setListingsInput} onSend={sendListings}
+          listingResults={listingsResults} blogResults={[]}
+          placeholder="e.g. 2-bed in New Cairo with pool…"
+        />
       )}
 
       {/* Stacked floating buttons */}
       <div className="fixed bottom-6 right-4 md:right-6 z-50 flex flex-col items-center gap-3">
-        {/* Nesty AI button */}
-        <div className="relative">
-          {/* Notification pop-up */}
-          {showNotif && !chatOpen && (
-            <div className="absolute bottom-16 right-0 bg-white rounded-[14px] shadow-xl border border-gray-100 p-3 w-52 animate-bounce-in">
-              <button onClick={() => setShowNotif(false)} className="absolute top-1.5 right-2 text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
-              <p className="text-xs font-semibold text-[#292a2b] mb-0.5">🐦 Meet Nesty!</p>
-              <p className="text-xs text-[#292a2b]/60 leading-relaxed">Tell me what you want and I'll find your perfect nest.</p>
-              {/* Arrow pointing down */}
-              <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white border-r border-b border-gray-100 rotate-45" />
-            </div>
-          )}
 
-          <button
-            onClick={openChat}
-            className="w-14 h-14 bg-[#f4603d] hover:bg-[#dd4f2e] text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-105"
-            aria-label="Chat with Nesty AI"
-          >
-            {chatOpen ? (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><path d="M18 6 6 18M6 6l12 12"/></svg>
-            ) : (
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-              </svg>
+        {/* Blog Nesty button — only on blog pages */}
+        {isBlog && (
+          <div className="relative">
+            {blogNotif && !blogOpen && (
+              <div className="absolute bottom-16 right-0 bg-white rounded-[14px] shadow-xl border border-gray-100 p-3 w-52">
+                <button onClick={() => setBlogNotif(false)} className="absolute top-1.5 right-2 text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
+                <p className="text-xs font-semibold text-[#292a2b] mb-0.5">🐦 Nesty Travel Guide</p>
+                <p className="text-xs text-[#292a2b]/60 leading-relaxed">Tell me about your Egypt trip and I'll suggest the best reads!</p>
+                <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white border-r border-b border-gray-100 rotate-45" />
+              </div>
             )}
-            {/* Unread dot */}
-            {!chatOpen && showNotif && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#237c58] rounded-full border-2 border-white" />
-            )}
-          </button>
-        </div>
+            <button
+              onClick={() => { setBlogOpen(o => !o); setBlogNotif(false) }}
+              className="w-14 h-14 bg-[#237c58] hover:bg-[#1b6044] text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-105"
+              aria-label="Chat with Nesty Travel Guide"
+            >
+              {blogOpen
+                ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                : <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+              }
+              {!blogOpen && blogNotif && <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#f4603d] rounded-full border-2 border-white" />}
+            </button>
+          </div>
+        )}
 
-        {/* WhatsApp button */}
+        {/* Listings Nesty button — only on listings/property/booking pages */}
+        {isListings && (
+          <div className="relative">
+            {listingsNotif && !listingsOpen && (
+              <div className="absolute bottom-16 right-0 bg-white rounded-[14px] shadow-xl border border-gray-100 p-3 w-52">
+                <button onClick={() => setListingsNotif(false)} className="absolute top-1.5 right-2 text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
+                <p className="text-xs font-semibold text-[#292a2b] mb-0.5">🐦 Meet Nesty!</p>
+                <p className="text-xs text-[#292a2b]/60 leading-relaxed">Tell me what you want and I'll find your perfect nest.</p>
+                <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white border-r border-b border-gray-100 rotate-45" />
+              </div>
+            )}
+            <button
+              onClick={() => { setListingsOpen(o => !o); setListingsNotif(false) }}
+              className="w-14 h-14 bg-[#f4603d] hover:bg-[#dd4f2e] text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-105"
+              aria-label="Chat with Nesty"
+            >
+              {listingsOpen
+                ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                : <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+              }
+              {!listingsOpen && listingsNotif && <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#237c58] rounded-full border-2 border-white" />}
+            </button>
+          </div>
+        )}
+
+        {/* WhatsApp — always visible */}
         <a
           href={waUrl}
           target="_blank"

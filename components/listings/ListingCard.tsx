@@ -36,7 +36,7 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
   const eligibilityInfo = ELIGIBILITY_LABELS[listing.eligibility]
 
   return (
-    <article className={clsx('group bg-white rounded-card overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300', className)}>
+    <article className={clsx('group bg-white rounded-card overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus-within:ring-2 focus-within:ring-[var(--color-accent-primary)] focus-within:ring-offset-2', className)}>
       {/* Image */}
       <Link href={listingHref} className="block relative aspect-[4/3] overflow-hidden">
         <Image

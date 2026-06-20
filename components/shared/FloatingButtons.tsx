@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import MashrabiyaPattern from '@/components/shared/MashrabiyaPattern'
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+201000000000'
 const waUrl = `https://wa.me/${WHATSAPP_NUMBER.replace(/\+/g, '')}?text=${encodeURIComponent('Hello! I am interested in booking a property on BirdNest.')}`
@@ -32,7 +33,8 @@ function ChatPanel({
 
   return (
     <div className="fixed bottom-32 right-4 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm bg-white rounded-[20px] shadow-2xl border border-gray-100 flex flex-col overflow-hidden" style={{ height: '480px' }}>
-      <div className={`${bg} text-white px-4 py-3 flex items-center justify-between shrink-0`}>
+      <div className={`${bg} text-white px-4 py-3 flex items-center justify-between shrink-0 relative overflow-hidden`}>
+        <MashrabiyaPattern opacity={0.12} tileSize={36} />
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-base">🐦</div>
           <div>

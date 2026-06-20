@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>BirdNest Website Comparison – Management Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --orange: #f4603d;
+    --orange-dk: #dd4f2e;
+    --dark: #1a1a2e;
+    --ink: #292a2b;
+    --muted: #6b7280;
+    --light: #f8f9fa;
+    --white: #ffffff;
+    --green: #16a34a;
+    --blue: #2563eb;
+    --yellow: #ca8a04;
+    --border: #e5e7eb;
+    --card-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #f0f2f5;
+    color: var(--ink);
+    font-size: 11pt;
+    line-height: 1.6;
+  }
+
+  /* ── SLIDE BASE ── */
+  .slide {
+    width: 297mm;
+    min-height: 210mm;
+    background: white;
+    margin: 0 auto 12mm;
+    padding: 14mm 18mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide:last-child { page-break-after: avoid; }
+
+  /* ── COVER SLIDE ── */
+  .cover {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20mm 22mm;
+  }
+  .cover-tag {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-size: 32pt;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 12px;
+    max-width: 200mm;
+  }
+  .cover h1 span { color: var(--orange); }
+  .cover p {
+    font-size: 12pt;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 30px;
+    max-width: 180mm;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 10px;
+  }
+  .cover-meta div { font-size: 9pt; color: rgba(255,255,255,0.5); }
+  .cover-meta strong { display: block; font-size: 11pt; color: white; font-weight: 600; }
+  .cover-deco {
+    position: absolute;
+    right: -20mm;
+    top: -20mm;
+    width: 120mm;
+    height: 120mm;
+    border-radius: 50%;
+    background: rgba(244,96,61,0.12);
+  }
+  .cover-deco2 {
+    position: absolute;
+    right: 10mm;
+    bottom: -10mm;
+    width: 80mm;
+    height: 80mm;
+    border-radius: 50%;
+    background: rgba(244,96,61,0.08);
+  }
+
+  /* ── SLIDE HEADER ── */
+  .slide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12mm;
+    padding-bottom: 5mm;
+    border-bottom: 2px solid var(--border);
+  }
+  .slide-header h2 {
+    font-size: 17pt;
+    font-weight: 800;
+    color: var(--dark);
+  }
+  .slide-header .slide-num {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--light);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .slide-header .tag {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 4px;
+  }
+
+  /* ── SECTION ACCENT BAR ── */
+  .accent-bar {
+    width: 40px;
+    height: 4px;
+    background: var(--orange);
+    border-radius: 2px;
+    margin-bottom: 8px;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  table.cmp thead tr {
+    background: var(--dark);
+    color: white;
+  }
+  table.cmp thead th {
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 9pt;
+  }
+  table.cmp thead th:first-child { border-radius: 8px 0 0 0; }
+  table.cmp thead th:last-child  { border-radius: 0 8px 0 0; }
+  table.cmp thead th.orange-col  { background: var(--orange); }
+  table.cmp thead th.blue-col    { background: #2563eb; }
+  table.cmp tbody tr:nth-child(even) { background: #fafafa; }
+  table.cmp tbody tr:hover { background: #fff7f5; }
+  table.cmp td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  table.cmp td:first-child { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  table.cmp td.tick { color: var(--green); font-weight: 700; }
+  table.cmp td.cross { color: #dc2626; font-weight: 700; }
+  table.cmp td.partial { color: var(--yellow); font-weight: 700; }
+
+  /* ── SCORE BARS ── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .score-item {
+    background: var(--light);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .score-label {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .score-label .vals { display: flex; gap: 12px; }
+  .score-label .v1 { color: var(--orange); font-weight: 700; }
+  .score-label .v2 { color: var(--blue); font-weight: 700; }
+  .bar-row { display: flex; gap: 4px; margin-bottom: 3px; }
+  .bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+  .bar-fill.orange { background: var(--orange); }
+  .bar-fill.blue   { background: var(--blue); }
+  .bar-legend { display: flex; gap: 16px; margin-top: 4px; font-size: 7.5pt; color: var(--muted); }
+  .bar-legend span::before { content: '■ '; }
+  .bar-legend .l1::before { color: var(--orange); }
+  .bar-legend .l2::before { color: var(--blue); }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .kpi-card {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align: center;
+    border-top: 4px solid var(--orange);
+  }
+  .kpi-card.blue-top { border-top-color: var(--blue); }
+  .kpi-val {
+    font-size: 20pt;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: 8pt;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ── TWO-COL LAYOUT ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .col-card {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .col-card h3 {
+    font-size: 11pt;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .col-card h3 .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .col-card ul { list-style: none; padding: 0; }
+  .col-card ul li {
+    font-size: 9pt;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    line-height: 1.4;
+  }
+  .col-card ul li:last-child { border-bottom: none; }
+  .col-card ul li .ic { font-size: 10pt; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── INSIGHT BOX ── */
+  .insight {
+    background: linear-gradient(135deg, #fff7f5, #fff0ed);
+    border-left: 4px solid var(--orange);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin-top: 10px;
+    font-size: 9.5pt;
+  }
+  .insight strong { color: var(--orange); }
+
+  /* ── SECTION NAV COMPARISON ── */
+  .nav-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .nav-col {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .nav-col-head {
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 10pt;
+    color: white;
+  }
+  .nav-col-head.orange-bg { background: var(--orange); }
+  .nav-col-head.blue-bg   { background: var(--blue); }
+  .nav-col ul { list-style: none; background: var(--light); padding: 0; }
+  .nav-col ul li {
+    font-size: 9pt;
+    padding: 7px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-col ul li:last-child { border-bottom: none; }
+  .nav-col ul li .url { color: var(--muted); font-size: 8pt; font-family: monospace; }
+  .badge-new { background: #dcfce7; color: var(--green); font-size: 7pt; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+  .badge-miss { background: #fee2e2; color: #dc2626; font-size: 7pt; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+
+  /* ── PROPERTY TABLE ── */
+  table.listings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+  }
+  table.listings thead tr { background: var(--orange); color: white; }
+  table.listings thead th { padding: 8px 10px; text-align: left; font-weight: 700; }
+  table.listings tbody tr:nth-child(even) { background: #fafafa; }
+  table.listings td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+  .badge-verify { background: #dcfce7; color: var(--green); font-size: 7.5pt; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+  .badge-free   { background: #dbeafe; color: var(--blue); font-size: 7.5pt; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+  .badge-mod    { background: #fef9c3; color: var(--yellow); font-size: 7.5pt; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+  .badge-nref   { background: #fee2e2; color: #dc2626; font-size: 7.5pt; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+  .price { font-weight: 700; color: var(--orange); }
+
+  /* ── RECOMMENDATIONS ── */
+  .rec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .rec-card {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 14px;
+    border-top: 3px solid var(--orange);
+  }
+  .rec-card.priority-high { border-top-color: #dc2626; }
+  .rec-card.priority-med  { border-top-color: var(--yellow); }
+  .rec-card.priority-low  { border-top-color: var(--green); }
+  .rec-priority {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .rec-priority.high { color: #dc2626; }
+  .rec-priority.med  { color: var(--yellow); }
+  .rec-priority.low  { color: var(--green); }
+  .rec-card h4 { font-size: 10pt; font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+  .rec-card p  { font-size: 8.5pt; color: var(--muted); line-height: 1.5; }
+
+  /* ── VERDICT SLIDE ── */
+  .verdict-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 4mm;
+  }
+  .verdict-card {
+    border-radius: 14px;
+    padding: 16px;
+    color: white;
+  }
+  .verdict-card.orange-card { background: linear-gradient(135deg, var(--orange), #c0392b); }
+  .verdict-card.blue-card   { background: linear-gradient(135deg, var(--blue), #1e3a8a); }
+  .verdict-card h3 { font-size: 12pt; font-weight: 800; margin-bottom: 8px; }
+  .verdict-card p  { font-size: 9pt; opacity: 0.9; line-height: 1.6; }
+  .verdict-card ul { list-style: none; margin-top: 10px; }
+  .verdict-card ul li { font-size: 8.5pt; opacity: 0.9; padding: 3px 0; display: flex; gap: 7px; }
+
+  /* ── SEO SLIDE ── */
+  .seo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .seo-col h3 {
+    font-size: 10pt;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 8px 8px 0 0;
+    color: white;
+    margin: 0;
+  }
+  .seo-col h3.orange-bg { background: var(--orange); }
+  .seo-col h3.blue-bg   { background: var(--blue); }
+  .seo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+    background: var(--light);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+  }
+  .seo-table td { padding: 6px 14px; border-bottom: 1px solid var(--border); }
+  .seo-table td:first-child { font-weight: 600; color: var(--muted); width: 40%; }
+  .seo-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-weight: 700; }
+  .cross-red { color: #dc2626; font-weight: 700; }
+
+  /* ── FOOTER STRIP ── */
+  .slide-footer {
+    position: absolute;
+    bottom: 8mm;
+    left: 18mm;
+    right: 18mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 7.5pt;
+    color: #9ca3af;
+    border-top: 1px solid var(--border);
+    padding-top: 5px;
+  }
+
+  /* ── PAGE BREAKS ── */
+  @media print {
+    body { background: white; }
+    .slide { margin: 0; page-break-after: always; }
+  }
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ SLIDE 1: COVER ═══════════════════════════════ -->
+<div class="slide cover">
+  <div class="cover-deco"></div>
+  <div class="cover-deco2"></div>
+  <div class="cover-tag">Confidential · Management Presentation</div>
+  <h1>BirdNest Website<br/><span>Comparative Analysis</span></h1>
+  <p>A comprehensive evaluation of the current production site (birdnestlife.com) against the new Vercel preview build — covering design, features, SEO, content, UX, and strategic direction.</p>
+  <div class="cover-meta">
+    <div><strong>Site A (Preview)</strong>first-project-poze66get-mazo.vercel.app</div>
+    <div><strong>Site B (Production)</strong>birdnestlife.com</div>
+    <div><strong>Date</strong>June 2026</div>
+    <div><strong>Prepared by</strong>Digital Strategy Team</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 2: EXECUTIVE SUMMARY ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Executive Summary</div>
+      <h2>What We Found at a Glance</h2>
+    </div>
+    <div class="slide-num">02 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-val">500+</div>
+      <div class="kpi-label">Verified Properties<br/>(Preview site)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">4.8★</div>
+      <div class="kpi-label">Average Guest Rating<br/>(Preview site)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">10K+</div>
+      <div class="kpi-label">Happy Guests<br/>(Preview site)</div>
+    </div>
+    <div class="kpi-card blue-top">
+      <div class="kpi-val">4</div>
+      <div class="kpi-label">Destinations Covered<br/>(Both sites)</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h3><span class="dot" style="background:var(--orange)"></span> Preview Site Strengths</h3>
+      <ul>
+        <li><span class="ic">✅</span> Full inline search widget (dates, location, guests)</li>
+        <li><span class="ic">✅</span> Bilingual Arabic/English with proper hreflang SEO</li>
+        <li><span class="ic">✅</span> Transparent pricing in EGP with upfront fees</li>
+        <li><span class="ic">✅</span> Rich Schema.org structured data (3 types)</li>
+        <li><span class="ic">✅</span> 6 verified testimonials with ratings &amp; nationalities</li>
+        <li><span class="ic">✅</span> "Verified" property badge system on listings</li>
+        <li><span class="ic">✅</span> Wishlist / saved listings feature</li>
+        <li><span class="ic">✅</span> Legal compliance disclosure (Egyptian law)</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h3><span class="dot" style="background:var(--blue)"></span> Production Site Strengths</h3>
+      <ul>
+        <li><span class="ic">✅</span> Working user account system (Register + Login)</li>
+        <li><span class="ic">✅</span> Become a Partner / host onboarding flow</li>
+        <li><span class="ic">✅</span> Privacy Policy page published</li>
+        <li><span class="ic">✅</span> Smart app integration for stay management</li>
+        <li><span class="ic">✅</span> Live in production — real traffic &amp; SEO history</li>
+        <li><span class="ic">✅</span> Investment angle: units as revenue assets</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>Key Finding:</strong> The Vercel preview is a major redesign that outperforms the production site in UX, SEO, trust signals, and marketplace features — but is missing a working auth system. Merging both is the recommended path to launch.
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 3: POSITIONING & BRAND ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Brand & Positioning</div>
+      <h2>Two Versions of the Same Brand — Different Direction</h2>
+    </div>
+    <div class="slide-num">03 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <table class="cmp">
+    <thead>
+      <tr>
+        <th style="width:22%">Dimension</th>
+        <th class="orange-col" style="width:39%">🔶 Preview Site (Vercel)</th>
+        <th class="blue-col" style="width:39%">🔷 Production (birdnestlife.com)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Page Title</td>
+        <td>BirdNest – Serviced Apartments &amp; Holiday Homes in Cairo, Sahel &amp; El Gouna</td>
+        <td>BirdNest | Curated Nests for the Mindful Traveler</td>
+      </tr>
+      <tr>
+        <td>Hero Tagline</td>
+        <td>"Your Home Away From Home in Egypt"</td>
+        <td>"Curated Nests for the Mindful Traveler"</td>
+      </tr>
+      <tr>
+        <td>Core Positioning</td>
+        <td>Functional marketplace: Book verified apartments &amp; chalets in Egypt</td>
+        <td>Aspirational lifestyle: Boutique stays for wellness, art &amp; community</td>
+      </tr>
+      <tr>
+        <td>Target Audience</td>
+        <td>Egyptian nationals, expats, Arab &amp; international tourists</td>
+        <td>Mindful travelers, design-conscious guests, property investors</td>
+      </tr>
+      <tr>
+        <td>Geographic Focus</td>
+        <td>Egypt-specific (New Cairo, North Coast, El Gouna, Sheikh Zayed)</td>
+        <td>Broader — not Egypt-only in messaging</td>
+      </tr>
+      <tr>
+        <td>Tone of Voice</td>
+        <td>Practical, transparent, trustworthy — "No surprises. No hidden fees."</td>
+        <td>Editorial, aspirational, wellness-forward</td>
+      </tr>
+      <tr>
+        <td>Business Model Emphasis</td>
+        <td>Guest booking marketplace + host listing platform</td>
+        <td>Rental platform + investment / property management angle</td>
+      </tr>
+      <tr>
+        <td>Host CTA</td>
+        <td>"List Your Property"</td>
+        <td>"Become a Partner"</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight" style="margin-top:12px">
+    <strong>Strategic Observation:</strong> The preview site shifts BirdNest closer to Airbnb/Booking.com in model — high-volume, search-driven, transaction-focused. The production site is more like a curated editorial brand. <strong>Management must decide which direction to commit to before launch.</strong>
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 4: DESIGN & UX ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Design & User Experience</div>
+      <h2>Visual Design, Typography &amp; UX Patterns</h2>
+    </div>
+    <div class="slide-num">04 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <table class="cmp">
+    <thead>
+      <tr>
+        <th style="width:22%">Aspect</th>
+        <th class="orange-col" style="width:39%">🔶 Preview Site</th>
+        <th class="blue-col" style="width:39%">🔷 Production Site</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Design Style</td>
+        <td>Modern marketplace UI — clean, card-based, Airbnb-inspired</td>
+        <td>Premium editorial / boutique — lifestyle-first</td>
+      </tr>
+      <tr>
+        <td>Primary Color</td>
+        <td>Warm coral-orange (#f4603d) on white + light gray</td>
+        <td>Not confirmed (assumed earthy/muted tones)</td>
+      </tr>
+      <tr>
+        <td>Typography</td>
+        <td>Recoleta SemiBold (display) + Gilroy Regular/SemiBold (body) + Cairo (Arabic)</td>
+        <td>Not captured</td>
+      </tr>
+      <tr>
+        <td>Hero Section</td>
+        <td>Full-viewport photo (Unsplash luxury interior) + dark overlay + animated geometric SVG pattern</td>
+        <td>Lifestyle imagery (wellness/boutique focus)</td>
+      </tr>
+      <tr>
+        <td>Animations</td>
+        <td>Slide-in cubic-bezier, hover card scale, pulse dot on availability, smooth transitions</td>
+        <td>Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Layout System</td>
+        <td>Container-based responsive grid — 1/2/3 column card layouts</td>
+        <td>App/platform-style with lifestyle sections</td>
+      </tr>
+      <tr>
+        <td>Mobile Responsiveness</td>
+        <td class="tick">✅ Fully responsive — hamburger menu, stacked grids, touch-friendly</td>
+        <td class="tick">✅ Responsive (has app planned)</td>
+      </tr>
+      <tr>
+        <td>Accessibility</td>
+        <td>Focus-visible rings, aria-labels, aria-hidden on decorative SVGs, keyboard nav</td>
+        <td>Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Sticky Header</td>
+        <td class="tick">✅ Sticky with backdrop-blur, transparent-to-white on scroll</td>
+        <td class="partial">⚠️ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Framework</td>
+        <td>Next.js (App Router + React Server Components)</td>
+        <td>Unknown CMS/framework</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight">
+    <strong>UX Winner: Preview Site</strong> — The Vercel build shows significantly more attention to micro-interactions, accessibility standards, and responsive patterns. The card-hover effects, pulse indicators, and wishlist heart button are engagement-boosting details.
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 5: NAVIGATION & PAGES ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Navigation & Site Structure</div>
+      <h2>Page Architecture &amp; Navigation Comparison</h2>
+    </div>
+    <div class="slide-num">05 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="nav-compare">
+    <div class="nav-col">
+      <div class="nav-col-head orange-bg">🔶 Preview Site — Navigation</div>
+      <ul>
+        <li>🏠 Home <span class="url">/</span></li>
+        <li>🔍 Browse Nests <span class="url">/listings</span> <span class="badge-new">NEW</span></li>
+        <li>❓ How It Works <span class="url">/how-it-works</span> <span class="badge-new">NEW</span></li>
+        <li>📝 Blog <span class="url">/blog</span> <span class="badge-new">NEW</span></li>
+        <li>ℹ️ About <span class="url">/about</span></li>
+        <li>📞 Contact <span class="url">/contact</span></li>
+        <li>💙 Wishlist (icon) <span class="url">/wishlist</span> <span class="badge-new">NEW</span></li>
+        <li>🏡 List Your Property <span class="url">/contact?type=list</span> <span class="badge-new">NEW</span></li>
+        <li>🌐 Language Toggle (EN / عربي) <span class="badge-new">NEW</span></li>
+        <li>🔐 Auth Pages <span class="badge-miss">MISSING</span></li>
+      </ul>
+    </div>
+    <div class="nav-col">
+      <div class="nav-col-head blue-bg">🔷 Production Site — Navigation</div>
+      <ul>
+        <li>🏠 Home <span class="url">/</span></li>
+        <li>🏘️ Property Listings <span class="url">/listing</span></li>
+        <li>ℹ️ About <span class="url">/about</span></li>
+        <li>🤝 Become a Partner <span class="url">/become-a-partner</span></li>
+        <li>🔐 Register <span class="url">/register</span></li>
+        <li>🔑 Login <span class="url">/login</span></li>
+        <li>🔒 Privacy Policy <span class="url">/privacy</span></li>
+        <li>🔍 Search Nests <span class="badge-miss">MISSING</span></li>
+        <li>❓ How It Works <span class="badge-miss">MISSING</span></li>
+        <li>📝 Blog <span class="badge-miss">MISSING</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="insight" style="margin-top:12px">
+    <strong>Gap Analysis:</strong> The preview site adds 4 critical new pages (Browse/Search, How It Works, Blog, Wishlist) but is missing user authentication entirely. The production site has working auth (Register/Login) but lacks content depth pages. <strong>Both must be merged before go-live.</strong>
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 6: FEATURES ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Features & Functionality</div>
+      <h2>Feature-by-Feature Comparison</h2>
+    </div>
+    <div class="slide-num">06 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <table class="cmp">
+    <thead>
+      <tr>
+        <th style="width:30%">Feature</th>
+        <th class="orange-col" style="width:35%">🔶 Preview Site</th>
+        <th class="blue-col" style="width:35%">🔷 Production Site</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hero Search Widget</td>
+        <td class="tick">✅ Inline (destination, check-in/out, guests + Find button)</td>
+        <td class="cross">❌ Not present on homepage</td>
+      </tr>
+      <tr>
+        <td>Property Listings</td>
+        <td class="tick">✅ Cards with photo, price, rating, beds, guests, badges</td>
+        <td class="tick">✅ Present via /listing page</td>
+      </tr>
+      <tr>
+        <td>Verified Property Badge</td>
+        <td class="tick">✅ Shield-check badge on every listing</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Transparent Pricing (EGP)</td>
+        <td class="tick">✅ Price/night + estimated utilities shown</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Cancellation Policy Display</td>
+        <td class="tick">✅ 3-tier policy shown (Free / Moderate / Non-refundable)</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Wishlist / Saved Listings</td>
+        <td class="tick">✅ Heart icon in nav + per-listing save button</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>User Authentication</td>
+        <td class="cross">❌ Missing (Register/Login not built yet)</td>
+        <td class="tick">✅ Register + Login pages live</td>
+      </tr>
+      <tr>
+        <td>Bilingual (AR / EN)</td>
+        <td class="tick">✅ Arabic toggle + hreflang SEO tags + Cairo font</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Guest Testimonials</td>
+        <td class="tick">✅ 6 reviews, names, flags, property, date</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>How It Works Section</td>
+        <td class="tick">✅ 4-step illustrated process on homepage</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Partner Onboarding</td>
+        <td class="tick">✅ "List Your Property" CTA</td>
+        <td class="tick">✅ "Become a Partner" page</td>
+      </tr>
+      <tr>
+        <td>Mobile App</td>
+        <td class="partial">⏳ Coming soon (iOS + Android notification form)</td>
+        <td class="tick">✅ Smart tech app mentioned (live?)</td>
+      </tr>
+      <tr>
+        <td>Newsletter Signup</td>
+        <td class="tick">✅ Email capture on homepage — "Get Early Access"</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Payment Methods Shown</td>
+        <td class="tick">✅ Visa, Mastercard, Meeza, Fawry, SSL badge</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Developer/Partner Logos</td>
+        <td class="tick">✅ Emaar, SODIC, Al-Futtaim, Booking.com, Airbnb, Expedia</td>
+        <td class="cross">❌ Not confirmed</td>
+      </tr>
+      <tr>
+        <td>Legal/Privacy</td>
+        <td class="partial">⚠️ Terms linked in footer only</td>
+        <td class="tick">✅ Dedicated /privacy page</td>
+      </tr>
+      <tr>
+        <td>Blog / Content Hub</td>
+        <td class="partial">⏳ Nav link present, content TBD</td>
+        <td class="cross">❌ Not present</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 7: PROPERTY LISTINGS ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Property Inventory</div>
+      <h2>Live Listings on the Preview Site</h2>
+    </div>
+    <div class="slide-num">07 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <table class="listings">
+    <thead>
+      <tr>
+        <th>Property Name</th>
+        <th>Location</th>
+        <th>Bedrooms</th>
+        <th>Max Guests</th>
+        <th>Rating</th>
+        <th>Price/Night</th>
+        <th>Cancellation</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Luxury Penthouse</strong></td>
+        <td>Fifth Settlement, New Cairo</td>
+        <td>3 BR</td>
+        <td>6</td>
+        <td>⭐ 4.8 (24)</td>
+        <td class="price">EGP 2,500</td>
+        <td><span class="badge-free">Free Cancel</span></td>
+        <td><span class="badge-verify">✓ Verified</span></td>
+      </tr>
+      <tr>
+        <td><strong>Modern 2BR, Katameya</strong></td>
+        <td>Katameya Heights, New Cairo</td>
+        <td>2 BR</td>
+        <td>4</td>
+        <td>⭐ 4.6 (18)</td>
+        <td class="price">EGP 1,800</td>
+        <td><span class="badge-mod">Moderate</span></td>
+        <td><span class="badge-verify">✓ Verified</span></td>
+      </tr>
+      <tr>
+        <td><strong>Cozy Studio Near AUC</strong></td>
+        <td>New Cairo City</td>
+        <td>Studio</td>
+        <td>2</td>
+        <td>⭐ 4.5 (31)</td>
+        <td class="price">EGP 900</td>
+        <td><span class="badge-free">Free Cancel</span></td>
+        <td><span class="badge-verify">✓ Verified</span></td>
+      </tr>
+      <tr>
+        <td><strong>Spacious Family Villa</strong></td>
+        <td>Shorouk City, New Cairo</td>
+        <td>4 BR</td>
+        <td>10</td>
+        <td>⭐ 4.9 (12)</td>
+        <td class="price">EGP 3,200</td>
+        <td><span class="badge-mod">Moderate</span></td>
+        <td><span class="badge-verify">✓ Verified</span></td>
+      </tr>
+      <tr>
+        <td><strong>Beachfront Chalet Marassi</strong></td>
+        <td>Marassi, North Coast</td>
+        <td>2 BR</td>
+        <td>5</td>
+        <td>⭐ 4.9 (47)</td>
+        <td class="price">EGP 3,500</td>
+        <td><span class="badge-nref">Non-Refundable</span></td>
+        <td><span class="badge-verify">✓ Verified</span></td>
+      </tr>
+      <tr>
+        <td><strong>Luxury Chalet Fouka Bay</strong></td>
+        <td>Fouka Bay, North Coast</td>
+        <td>3 BR</td>
+        <td>7</td>
+        <td>⭐ 4.8 (29)</td>
+        <td class="price">EGP 4,200</td>
+        <td><span class="badge-nref">Non-Refundable</span></td>
+        <td><span class="badge-verify">✓ Verified</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 14px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+    <div class="col-card" style="text-align:center; padding: 12px;">
+      <div style="font-size:18pt; font-weight:800; color:var(--orange)">New Cairo</div>
+      <div style="font-size:8.5pt; color:var(--muted); margin-top:4px">4 properties listed<br/>EGP 900 – 3,200/night</div>
+    </div>
+    <div class="col-card" style="text-align:center; padding: 12px;">
+      <div style="font-size:18pt; font-weight:800; color:var(--orange)">North Coast</div>
+      <div style="font-size:8.5pt; color:var(--muted); margin-top:4px">3 properties listed<br/>EGP 3,500 – 4,200/night</div>
+    </div>
+    <div class="col-card" style="text-align:center; padding: 12px;">
+      <div style="font-size:18pt; font-weight:800; color:var(--orange)">El Gouna</div>
+      <div style="font-size:8.5pt; color:var(--muted); margin-top:4px">3 properties listed<br/>Red Sea destination</div>
+    </div>
+    <div class="col-card" style="text-align:center; padding: 12px;">
+      <div style="font-size:18pt; font-weight:800; color:var(--orange)">Sheikh Zayed</div>
+      <div style="font-size:8.5pt; color:var(--muted); margin-top:4px">2 properties listed<br/>Upscale compounds</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>Note:</strong> Production site listing counts and pricing are not captured — a direct data comparison is not possible. Recommend syncing property data across both versions.
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 8: SEO & TECHNICAL ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">SEO & Technical Performance</div>
+      <h2>Search Engine Optimization &amp; Technical Stack</h2>
+    </div>
+    <div class="slide-num">08 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="seo-grid">
+    <div class="seo-col">
+      <h3 class="orange-bg">🔶 Preview Site — SEO Audit</h3>
+      <table class="seo-table">
+        <tr><td>Page Title</td><td>✅ Keyword-rich, location-specific, under 70 chars</td></tr>
+        <tr><td>Meta Description</td><td>✅ Compelling, includes USPs + rating + count</td></tr>
+        <tr><td>Canonical URL</td><td>✅ Points to birdnestlife.com (correct)</td></tr>
+        <tr><td>hreflang Tags</td><td>✅ EN + AR + x-default declared</td></tr>
+        <tr><td>Robots</td><td>✅ index, follow</td></tr>
+        <tr><td>Open Graph Tags</td><td>✅ Full suite (title, desc, image 1200×630)</td></tr>
+        <tr><td>Twitter Card</td><td>✅ summary_large_image</td></tr>
+        <tr><td>Schema.org</td><td>✅ Organization + WebSite + RealEstateListing</td></tr>
+        <tr><td>SearchAction Schema</td><td>✅ URL template for sitelinks searchbox</td></tr>
+        <tr><td>Image ALT tags</td><td>✅ All images have descriptive alt text</td></tr>
+        <tr><td>HTTPS/SSL</td><td>✅ Enforced</td></tr>
+        <tr><td>Analytics</td><td>✅ Vercel Analytics + Speed Insights</td></tr>
+        <tr><td>Keywords Focus</td><td>Egypt apartments, Cairo holiday homes, El Gouna rental, Sahel vacation</td></tr>
+      </table>
+    </div>
+    <div class="seo-col">
+      <h3 class="blue-bg">🔷 Production Site — SEO Audit</h3>
+      <table class="seo-table">
+        <tr><td>Page Title</td><td>⚠️ "Curated Nests for the Mindful Traveler" — lacks geo keywords</td></tr>
+        <tr><td>Meta Description</td><td>⚠️ Not captured in analysis</td></tr>
+        <tr><td>Canonical URL</td><td>✅ birdnestlife.com</td></tr>
+        <tr><td>hreflang Tags</td><td>❌ Not confirmed</td></tr>
+        <tr><td>Robots</td><td>⚠️ Not confirmed</td></tr>
+        <tr><td>Open Graph Tags</td><td>⚠️ Not confirmed</td></tr>
+        <tr><td>Twitter Card</td><td>⚠️ Not confirmed</td></tr>
+        <tr><td>Schema.org</td><td>❌ Not confirmed</td></tr>
+        <tr><td>SearchAction Schema</td><td>❌ Not confirmed</td></tr>
+        <tr><td>Image ALT tags</td><td>⚠️ Not confirmed</td></tr>
+        <tr><td>HTTPS/SSL</td><td>✅ Enforced</td></tr>
+        <tr><td>Analytics</td><td>⚠️ Not confirmed</td></tr>
+        <tr><td>Keywords Focus</td><td>Mindful travel, wellness, boutique stays, community</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>SEO Winner: Preview Site by a significant margin.</strong> The production title "Curated Nests for the Mindful Traveler" has near-zero search volume compared to "Serviced Apartments Cairo" or "Holiday Homes El Gouna". Switching to the preview's keyword strategy alone could meaningfully increase organic traffic.
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 9: TRUST & CONTENT ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Trust Signals & Content Quality</div>
+      <h2>Social Proof, Policies &amp; Content Depth</h2>
+    </div>
+    <div class="slide-num">09 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="two-col" style="margin-bottom: 12px;">
+    <div class="col-card">
+      <h3><span class="dot" style="background:var(--orange)"></span> Preview Site — Trust Signals</h3>
+      <ul>
+        <li><span class="ic">⭐</span> <strong>4.8 / 5</strong> overall rating from 10,000+ guests — shown prominently</li>
+        <li><span class="ic">🛡️</span> "Verified" shield badge on each listing card</li>
+        <li><span class="ic">💬</span> 6 detailed testimonials (name, country flag, property, date)</li>
+        <li><span class="ic">💳</span> Visa / Mastercard / Meeza / Fawry payment logos + SSL badge</li>
+        <li><span class="ic">🏢</span> Partner logos: Emaar, SODIC, Al-Futtaim, Booking.com, Airbnb, Expedia</li>
+        <li><span class="ic">📋</span> 3-tier cancellation policy clearly disclosed</li>
+        <li><span class="ic">⚖️</span> Egyptian legal eligibility notice (couples policy)</li>
+        <li><span class="ic">🔒</span> "Funds held securely, released after check-in" message</li>
+        <li><span class="ic">📊</span> Stats: 500+ properties, 10K+ guests, 24/7 support displayed in hero</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h3><span class="dot" style="background:var(--blue)"></span> Production Site — Trust Signals</h3>
+      <ul>
+        <li><span class="ic">✅</span> Published Privacy Policy page (/privacy)</li>
+        <li><span class="ic">✅</span> Working user registration — implies data handling responsibility</li>
+        <li><span class="ic">🤝</span> "Become a Partner" flow — signals established host relationships</li>
+        <li><span class="ic">📱</span> Smart tech app integration — signals investment in platform tech</li>
+        <li><span class="ic">🏆</span> "Premium designs, luxurious amenities" editorial positioning</li>
+        <li><span class="ic">⚠️</span> No visible ratings, testimonials, or guest reviews captured</li>
+        <li><span class="ic">⚠️</span> No payment method logos confirmed</li>
+        <li><span class="ic">⚠️</span> No partner logos confirmed</li>
+      </ul>
+    </div>
+  </div>
+
+  <table class="cmp">
+    <thead>
+      <tr>
+        <th style="width:25%">Testimonials Detail (Preview Site)</th>
+        <th class="orange-col" style="width:30%">Reviewer</th>
+        <th style="width:25%">Property</th>
+        <th style="width:10%">Rating</th>
+        <th style="width:10%">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Egypt</td><td>Nadia El-Sayed</td><td>Fouka Bay Chalet, North Coast</td><td>⭐ 5.0</td><td>Jul 2025</td></tr>
+      <tr><td>United Kingdom</td><td>James &amp; Karen T.</td><td>Fifth Settlement Penthouse</td><td>⭐ 5.0</td><td>Mar 2025</td></tr>
+      <tr><td>Saudi Arabia</td><td>Omar Al-Rashid</td><td>El Gouna Lagoon Villa</td><td>⭐ 5.0</td><td>Aug 2025</td></tr>
+      <tr><td>France</td><td>Sophie B.</td><td>Katameya Heights Apartment</td><td>⭐ 4.0</td><td>May 2025</td></tr>
+      <tr><td>Egypt</td><td>Ahmed &amp; Rania M.</td><td>Sheikh Zayed Villa</td><td>⭐ 5.0</td><td>Jun 2025</td></tr>
+      <tr><td>India</td><td>Priya S.</td><td>Marassi Beachfront Chalet</td><td>⭐ 5.0</td><td>Sep 2025</td></tr>
+    </tbody>
+  </table>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 10: SCORES ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Overall Scores</div>
+      <h2>Performance Scorecard — 8 Key Dimensions</h2>
+    </div>
+    <div class="slide-num">10 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="score-grid">
+
+    <div class="score-item">
+      <div class="score-label">SEO Readiness <div class="vals"><span class="v1">9/10</span><span class="v2">5/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:90%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:50%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">Design Quality <div class="vals"><span class="v1">9/10</span><span class="v2">7/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:90%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:70%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">Feature Completeness <div class="vals"><span class="v1">8/10</span><span class="v2">6/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:80%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:60%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">User Auth &amp; Accounts <div class="vals"><span class="v1">3/10</span><span class="v2">9/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:30%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:90%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">Trust &amp; Social Proof <div class="vals"><span class="v1">10/10</span><span class="v2">5/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:100%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:50%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">Bilingual Support <div class="vals"><span class="v1">9/10</span><span class="v2">4/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:90%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:40%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">Content Depth <div class="vals"><span class="v1">8/10</span><span class="v2">5/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:80%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:50%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">Mobile Readiness <div class="vals"><span class="v1">9/10</span><span class="v2">7/10</span></div></div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill orange" style="width:90%"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill blue" style="width:70%"></div></div>
+      </div>
+      <div class="bar-legend"><span class="l1">Preview Site</span><span class="l2">Production Site</span></div>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+    <div class="col-card" style="text-align:center; padding: 16px;">
+      <div style="font-size:28pt; font-weight:900; color:var(--orange)">7.9<span style="font-size:14pt">/10</span></div>
+      <div style="font-size:9pt; color:var(--muted); margin-top:4px; font-weight:600">Preview Site — Overall Score</div>
+    </div>
+    <div class="col-card" style="text-align:center; padding: 16px;">
+      <div style="font-size:28pt; font-weight:900; color:var(--blue)">6.1<span style="font-size:14pt">/10</span></div>
+      <div style="font-size:9pt; color:var(--muted); margin-top:4px; font-weight:600">Production Site — Overall Score</div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SLIDE 11: RECOMMENDATIONS ═══════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="tag">Recommendations & Next Steps</div>
+      <h2>Action Plan for Management</h2>
+    </div>
+    <div class="slide-num">11 / 11</div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="rec-grid">
+    <div class="rec-card priority-high">
+      <div class="rec-priority high">🔴 High Priority — Launch Blocker</div>
+      <h4>1. Port Auth System to Preview Build</h4>
+      <p>The preview site is missing Register/Login — a critical feature for a rental marketplace. Migrate the existing auth system from production (birdnestlife.com) into the new Next.js codebase before deploying to production.</p>
+    </div>
+    <div class="rec-card priority-high">
+      <div class="rec-priority high">🔴 High Priority — Launch Blocker</div>
+      <h4>2. Add Dedicated Privacy Policy Page</h4>
+      <p>The preview site lacks a proper /privacy page. This is a legal requirement under Egypt's data protection laws and GDPR (for EU visitors). Copy/update the production site's policy and create a full page.</p>
+    </div>
+    <div class="rec-card priority-med">
+      <div class="rec-priority med">🟡 Medium Priority — Pre-launch</div>
+      <h4>3. Decide &amp; Commit to Brand Positioning</h4>
+      <p>The two sites represent divergent brand identities — functional marketplace vs. lifestyle platform. Management must choose one direction before launch. Recommendation: adopt the preview's transactional positioning with a lifestyle aesthetic layer.</p>
+    </div>
+    <div class="rec-card priority-med">
+      <div class="rec-priority med">🟡 Medium Priority — Pre-launch</div>
+      <h4>4. Update Production Site SEO Title Immediately</h4>
+      <p>The production site's title "Curated Nests for the Mindful Traveler" has very low commercial search intent. Switch to the preview's keyword-rich title today — this is a zero-dev, high-impact change that can boost organic traffic within weeks.</p>
+    </div>
+    <div class="rec-card priority-low">
+      <div class="rec-priority low">🟢 Enhancement — Post-launch</div>
+      <h4>5. Build &amp; Launch the Blog / Content Hub</h4>
+      <p>The preview has a /blog nav link with no content. Publishing destination guides (El Gouna guide, Sahel summer checklist, New Cairo neighborhoods) will build long-tail SEO authority and establish BirdNest as a travel resource, not just a booking tool.</p>
+    </div>
+    <div class="rec-card priority-low">
+      <div class="rec-priority low">🟢 Enhancement — Post-launch</div>
+      <h4>6. Accelerate Mobile App &amp; Smart Tech Integration</h4>
+      <p>Both sites mention app functionality — production references smart tech, preview shows "coming soon" with iOS/Android capture form. Prioritizing the app (digital keys, WhatsApp check-in, smart locks) will strongly differentiate BirdNest from generic listing sites.</p>
+    </div>
+  </div>
+
+  <div class="verdict-grid">
+    <div class="verdict-card orange-card">
+      <h3>🔶 Preview Site — Deploy When Ready</h3>
+      <p>This is a significant upgrade and should replace the production site once auth, privacy policy, and final QA are complete. The SEO, UX, and trust signal improvements will drive measurable uplift in conversions.</p>
+      <ul>
+        <li>✅ Add Register/Login system</li>
+        <li>✅ Add /privacy page</li>
+        <li>✅ Final QA on mobile + Arabic</li>
+        <li>✅ Deploy to birdnestlife.com</li>
+      </ul>
+    </div>
+    <div class="verdict-card blue-card">
+      <h3>🔷 Production Site — Interim Fixes Only</h3>
+      <p>Do not invest further development in the current production site. Apply only quick wins (SEO title, meta description) while the preview build is finalized. Maintain it as-is until cutover.</p>
+      <ul>
+        <li>🔧 Update page title &amp; meta description</li>
+        <li>🔧 Add basic Schema.org markup</li>
+        <li>🔧 Freeze all other new development</li>
+        <li>🔧 Plan migration timeline with engineering</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>BirdNest Website Comparative Analysis · June 2026</span>
+    <span>CONFIDENTIAL</span>
+  </div>
+</div>
+
+</body>
+</html>

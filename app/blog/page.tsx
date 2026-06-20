@@ -3,9 +3,18 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Link from 'next/link'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://birdnestlife.com'
+
 export const metadata: Metadata = {
   title: 'Blog & Travel Guides — BirdNest Egypt',
-  description: 'Travel stories, neighbourhood guides, and stay-smart tips for Egypt. New Cairo, North Coast, El Gouna & more.',
+  description: 'Travel stories, neighbourhood guides, and stay-smart tips for Egypt holiday rentals. New Cairo, North Coast, El Gouna & Sheikh Zayed insider guides.',
+  alternates: { canonical: `${siteUrl}/blog` },
+  openGraph: {
+    title: 'Blog & Travel Guides — BirdNest Egypt',
+    description: 'Travel stories, neighbourhood guides, and stay-smart tips for Egypt holiday rentals.',
+    url: `${siteUrl}/blog`,
+    images: [{ url: `${siteUrl}/og-image.jpg`, width: 1200, height: 630 }],
+  },
 }
 
 const FEATURED = {

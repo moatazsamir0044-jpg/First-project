@@ -22,13 +22,17 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const listing = mockListings.find(l => l.slug === params.slug)
   if (!listing) return {}
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://birdnestlife.com'
   return {
-    title: `${listing.title} – BirdNest`,
+    title: listing.title,
     description: listing.description.slice(0, 160),
+    alternates: { canonical: `${siteUrl}/listings/${listing.slug}` },
     openGraph: {
-      title: listing.title,
+      title: `${listing.title} – BirdNest`,
       description: listing.description.slice(0, 160),
-      images: [listing.images[0]],
+      url: `${siteUrl}/listings/${listing.slug}`,
+      type: 'website',
+      images: [{ url: listing.images[0], width: 1200, height: 800, alt: listing.title }],
     },
   }
 }

@@ -10,10 +10,12 @@ import Testimonials from '@/components/home/Testimonials'
 import AppDownload from '@/components/home/AppDownload'
 import PartnerLogos from '@/components/home/PartnerLogos'
 import TrustStrip from '@/components/home/TrustStrip'
+import HomeSchema from '@/components/home/HomeSchema'
 
 export default function HomePage() {
   return (
     <>
+      <HomeSchema />
       <Header />
       <main>
         <Hero />

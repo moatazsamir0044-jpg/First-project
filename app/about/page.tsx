@@ -3,9 +3,19 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Link from 'next/link'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://birdnestlife.com'
+
 export const metadata: Metadata = {
   title: 'About BirdNest – Egypt\'s Trusted Holiday Home Platform',
-  description: 'BirdNest was founded to bring trust, transparency, and quality to Egypt\'s vacation rental market.',
+  description: 'BirdNest was founded to bring trust, transparency, and quality to Egypt\'s vacation rental market. 500+ verified properties, 10,000+ happy guests, 4.8★ average rating.',
+  alternates: { canonical: `${siteUrl}/about` },
+  openGraph: {
+    title: 'About BirdNest – Egypt\'s Trusted Holiday Home Platform',
+    description: 'BirdNest was founded to bring trust, transparency, and quality to Egypt\'s vacation rental market. 500+ verified properties, 10,000+ happy guests.',
+    url: `${siteUrl}/about`,
+    images: [{ url: `${siteUrl}/og-image.jpg`, width: 1200, height: 630 }],
+    type: 'website',
+  },
 }
 
 export default function AboutPage() {

@@ -14,26 +14,29 @@ interface BookingStepsProps {
 
 export default function BookingSteps({ currentStep }: BookingStepsProps) {
   return (
-    <div className="flex items-center justify-center gap-0 mb-8">
+    <nav aria-label="Booking steps" className="flex items-center justify-center gap-0 mb-8">
       {STEPS.map((step, i) => (
         <div key={step.number} className="flex items-center">
           <div className="flex flex-col items-center">
             <div
+              aria-current={currentStep === step.number ? 'step' : undefined}
               className={clsx(
-                'w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-colors',
+                'w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 border-2',
                 currentStep > step.number
-                  ? 'bg-green text-white'
+                  ? 'bg-[var(--color-accent-secondary)] border-[var(--color-accent-secondary)] text-white'
                   : currentStep === step.number
-                  ? 'bg-orange text-white'
-                  : 'bg-gray-200 text-gray-500'
+                  ? 'bg-[var(--color-accent-primary)] border-[var(--color-accent-primary)] text-white shadow-md shadow-orange/30'
+                  : 'bg-white border-gray-200 text-[var(--color-text)]/40'
               )}
             >
               {currentStep > step.number ? <Check className="w-4 h-4" /> : step.number}
             </div>
             <span
               className={clsx(
-                'text-xs mt-1 font-medium',
-                currentStep >= step.number ? 'text-ink' : 'text-ink/40'
+                'text-xs mt-1.5 font-medium tracking-wide',
+                currentStep >= step.number
+                  ? 'text-[var(--color-text)]'
+                  : 'text-[var(--color-text)]/35'
               )}
             >
               {step.label}
@@ -42,13 +45,15 @@ export default function BookingSteps({ currentStep }: BookingStepsProps) {
           {i < STEPS.length - 1 && (
             <div
               className={clsx(
-                'w-12 md:w-20 h-0.5 mx-2 mb-4 transition-colors',
-                currentStep > step.number ? 'bg-green' : 'bg-gray-200'
+                'w-10 md:w-16 h-0.5 mx-1.5 mb-4 rounded-full transition-all duration-300',
+                currentStep > step.number
+                  ? 'bg-[var(--color-accent-secondary)]'
+                  : 'bg-gray-200'
               )}
             />
           )}
         </div>
       ))}
-    </div>
+    </nav>
   )
 }

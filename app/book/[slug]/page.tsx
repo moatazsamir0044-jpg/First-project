@@ -39,15 +39,18 @@ function BookingFlow({ slug }: { slug: string }) {
   const total = nights * listing.pricePerNight + nights * listing.utilitiesEst + listing.cleaningFee
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8">
+    <main className="min-h-screen bg-[var(--color-ground)] py-8">
       <div className="container-site max-w-2xl">
         {step < 5 && (
-          <Link href={`/listings/${listing.slug}`} className="flex items-center gap-1 text-sm text-[#292a2b]/50 hover:text-[#f4603d] mb-6 transition-colors">
+          <Link
+            href={`/listings/${listing.slug}`}
+            className="flex items-center gap-1 text-sm text-[var(--color-text)]/50 hover:text-[var(--color-accent-primary)] mb-6 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"
+          >
             ← Back to property
           </Link>
         )}
         {step < 5 && <BookingSteps currentStep={step} />}
-        <div className="bg-white rounded-[16px] shadow-sm p-6 md:p-8">
+        <div className="bg-white rounded-card shadow-sm p-6 md:p-8">
           {step === 1 && <StepReview listing={listing} checkIn={checkIn} checkOut={checkOut} guests={guests} onNext={() => setStep(2)} />}
           {step === 2 && <StepDetails onNext={(details) => { setGuestDetails(details); setStep(3) }} onBack={() => setStep(1)} initial={guestDetails || undefined} />}
           {step === 3 && <StepEligibility eligibility={listing.eligibility} nationality={guestDetails?.nationality || ''} onNext={(type) => { setEligibilityType(type); setStep(4) }} onBack={() => setStep(2)} />}

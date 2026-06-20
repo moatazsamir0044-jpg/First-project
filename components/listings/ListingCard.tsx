@@ -16,6 +16,8 @@ interface ListingCardProps {
   checkIn?: string
   checkOut?: string
   guests?: number
+  /** When true, card links go straight to the booking flow (/book/[slug]) and the CTA reads "Book now" */
+  bookNow?: boolean
 }
 
 const ELIGIBILITY_LABELS: Record<string, { label: string; color: string }> = {
@@ -23,7 +25,7 @@ const ELIGIBILITY_LABELS: Record<string, { label: string; color: string }> = {
   families: { label: 'Families & couples', color: 'text-ink/50' },
 }
 
-export default function ListingCard({ listing, className, checkIn, checkOut, guests }: ListingCardProps) {
+export default function ListingCard({ listing, className, checkIn, checkOut, guests, bookNow }: ListingCardProps) {
   const [wishlisted, setWishlisted] = useState(false)
   const [imgIdx, setImgIdx] = useState(0)
 
@@ -32,11 +34,12 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
   if (checkOut) params.set('checkOut', checkOut)
   if (guests && guests > 1) params.set('guests', String(guests))
   const paramStr = params.toString()
-  const listingHref = `/listings/${listing.slug}${paramStr ? `?${paramStr}` : ''}`
+  const base = bookNow ? `/book/${listing.slug}` : `/listings/${listing.slug}`
+  const listingHref = `${base}${paramStr ? `?${paramStr}` : ''}`
   const eligibilityInfo = ELIGIBILITY_LABELS[listing.eligibility]
 
   return (
-    <article className={clsx('group bg-white rounded-card overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300', className)}>
+    <article className={clsx('group bg-white rounded-card overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus-within:ring-2 focus-within:ring-[var(--color-accent-primary)] focus-within:ring-offset-2', className)}>
       {/* Image */}
       <Link href={listingHref} className="block relative aspect-[4/3] overflow-hidden">
         <Image
@@ -134,9 +137,9 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
           </div>
           <Link
             href={listingHref}
-            className="text-xs font-semibold bg-orange/10 text-orange hover:bg-orange hover:text-white transition-colors px-3 py-1.5 rounded-btn"
+            className="text-xs font-semibold bg-orange/10 text-orange hover:bg-orange hover:text-white transition-colors px-3 py-1.5 rounded-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange focus-visible:ring-offset-1"
           >
-            View Details
+            {bookNow ? 'Book now' : 'View Details'}
           </Link>
         </div>
       </div>

@@ -67,6 +67,7 @@ body {
 @tailwind utilities;
 
 :root {
+  /* Palette */
   --orange: #f4603d;
   --orange-dk: #dd4f2e;
   --green: #237c58;
@@ -75,6 +76,26 @@ body {
   --ink: #292a2b;
   --sky: #c9e1ea;
   --white: #ffffff;
+  /* Semantic tokens */
+  --color-ground: var(--cream);
+  --color-surface: var(--white);
+  --color-text: var(--ink);
+  --color-text-muted: color-mix(in srgb, var(--ink) 55%, transparent);
+  --color-accent-primary: var(--orange);
+  --color-accent-primary-dk: var(--orange-dk);
+  --color-accent-secondary: var(--green);
+  --color-accent-secondary-dk: var(--green-dk);
+  --color-night: var(--ink);
+
+  /* Typography */
+  --font-display: 'Recoleta', Georgia, serif;
+  --font-body: 'Gilroy', system-ui, sans-serif;
+
+  /* Layout */
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --radius-pill: 999px;
+  --max-site: 1240px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

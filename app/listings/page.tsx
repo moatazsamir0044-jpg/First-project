@@ -1,6 +1,7 @@
 'use client'
 import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { ChevronDown, SlidersHorizontal } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ListingCard from '@/components/listings/ListingCard'
@@ -20,6 +21,7 @@ function ListingsContent() {
   const [maxPrice, setMaxPrice] = useState(10000)
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([])
   const [sortBy, setSortBy] = useState('popular')
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const updateURL = (updates: Record<string, string>) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -75,10 +77,23 @@ function ListingsContent() {
         </div>
 
         <div className="container-site py-8">
+          {/* Mobile filter toggle */}
+          <button
+            className="lg:hidden w-full flex items-center justify-between bg-white border border-gray-200 rounded-btn px-4 py-3 text-sm font-semibold text-[var(--color-text)] mb-4"
+            onClick={() => setFiltersOpen(o => !o)}
+            aria-expanded={filtersOpen}
+          >
+            <span className="flex items-center gap-2">
+              <SlidersHorizontal className="w-4 h-4" />
+              Filters
+            </span>
+            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${filtersOpen ? 'rotate-180' : ''}`} />
+          </button>
+
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
-            <aside className="lg:w-72 shrink-0">
-              <div className="bg-white rounded-card border border-gray-100 p-6 space-y-6 sticky top-24">
+            <aside className={`lg:w-72 shrink-0 ${filtersOpen ? 'block' : 'hidden'} lg:block`}>
+              <div className="bg-white rounded-card border border-gray-100 p-6 space-y-6 lg:sticky lg:top-24">
                 <div>
                   <label className="block text-xs font-semibold text-[var(--color-text)]/50 uppercase tracking-wider mb-2">
                     Location

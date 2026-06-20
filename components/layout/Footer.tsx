@@ -14,8 +14,8 @@ export default function Footer() {
       />
 
       <footer className="bg-[var(--color-night)] text-white">
-        <div className="container-site py-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        <div className="container-site py-10 md:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10 mb-8 md:mb-12">
             <div className="md:col-span-1">
               <Image
                 src="/images/logos/logo-cream.png"

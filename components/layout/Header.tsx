@@ -40,7 +40,7 @@ export default function Header() {
         scrolled ? 'bg-white shadow-md' : 'bg-white/95 backdrop-blur-sm'
       }`}
     >
-      <div className="container-site flex items-center justify-between h-24">
+      <div className="container-site flex items-center justify-between h-16 md:h-24">
         <Link
           href="/"
           className="flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"
@@ -50,7 +50,7 @@ export default function Header() {
             alt="BirdNest"
             width={200}
             height={200}
-            className="h-20 w-auto"
+            className="h-12 md:h-20 w-auto"
             priority
           />
         </Link>
@@ -122,7 +122,20 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <div className="flex gap-3 pt-2 border-t border-gray-100">
+          <div className="flex flex-wrap gap-3 pt-2 border-t border-gray-100">
+            <Link
+              href="/wishlist"
+              className="relative flex items-center gap-2 text-sm font-medium text-[var(--color-text)]/70 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)]"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Heart className="w-4 h-4" />
+              {isArabic ? 'المفضلة' : 'Saved'}
+              {wishlist.length > 0 && (
+                <span className="w-4 h-4 rounded-full bg-[var(--color-accent-primary)] text-white text-[10px] font-bold flex items-center justify-center">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
             <button
               onClick={toggleLang}
               className="text-sm font-medium text-[var(--color-text)]/60 px-3 py-1.5 border border-gray-200 rounded-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)]"

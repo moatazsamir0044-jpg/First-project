@@ -99,7 +99,7 @@ export default function ListingDetailPage({ params }: { params: { slug: string }
           </div>
 
           {/* Main content + sidebar */}
-          <div className="flex flex-col lg:flex-row gap-10">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
             {/* Left content */}
             <div className="flex-1 min-w-0 space-y-10">
               {/* Property overview */}

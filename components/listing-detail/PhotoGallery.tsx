@@ -18,8 +18,26 @@ export default function PhotoGallery({ images, title }: PhotoGalleryProps) {
 
   return (
     <>
-      {/* Gallery grid */}
-      <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[360px] md:h-[480px] rounded-card overflow-hidden">
+      {/* Mobile: single hero image with photo count pill */}
+      <div
+        className="md:hidden relative h-[260px] rounded-card overflow-hidden cursor-pointer"
+        onClick={() => openLightbox(0)}
+      >
+        <Image
+          src={images[0]}
+          alt={`${title} - photo 1`}
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5">
+          <Images className="w-3.5 h-3.5" />
+          {images.length} photos
+        </div>
+      </div>
+
+      {/* Desktop: 4-column grid */}
+      <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[480px] rounded-card overflow-hidden">
         {/* Main large image */}
         <div className="col-span-2 row-span-2 relative cursor-pointer" onClick={() => openLightbox(0)}>
           <Image

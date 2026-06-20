@@ -86,9 +86,9 @@ export default function SearchWidget() {
           {isArabic ? 'الضيوف' : 'Guests'}
         </label>
         <div className="flex items-center gap-3">
-          <button onClick={() => setGuests(Math.max(1, guests - 1))} className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-[#292a2b] hover:border-[#f4603d] hover:text-[#f4603d] transition-colors font-bold text-lg leading-none">−</button>
+          <button onClick={() => setGuests(Math.max(1, guests - 1))} className="w-10 h-10 md:w-7 md:h-7 rounded-full border border-gray-300 flex items-center justify-center text-[#292a2b] hover:border-[#f4603d] hover:text-[#f4603d] transition-colors font-bold text-lg leading-none">−</button>
           <span className="text-sm font-semibold text-[#292a2b] w-4 text-center">{guests}</span>
-          <button onClick={() => setGuests(Math.min(20, guests + 1))} className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-[#292a2b] hover:border-[#f4603d] hover:text-[#f4603d] transition-colors font-bold text-lg leading-none">+</button>
+          <button onClick={() => setGuests(Math.min(20, guests + 1))} className="w-10 h-10 md:w-7 md:h-7 rounded-full border border-gray-300 flex items-center justify-center text-[#292a2b] hover:border-[#f4603d] hover:text-[#f4603d] transition-colors font-bold text-lg leading-none">+</button>
         </div>
       </div>
 

@@ -34,7 +34,7 @@ export default function Hero() {
           </p>
 
           <h1
-            className="text-4xl md:text-6xl lg:text-7xl font-semibold text-white leading-tight mb-6"
+            className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-semibold text-white leading-tight mb-6"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             {isArabic ? (
@@ -61,7 +61,7 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
             <Link
               href="/listings"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-btn font-semibold text-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent-primary)]"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-btn font-semibold text-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent-primary)]"
               style={{ background: 'var(--color-accent-primary)', color: '#fff' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-accent-primary-dk)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-accent-primary)')}
@@ -73,7 +73,7 @@ export default function Hero() {
             </Link>
             <Link
               href="/booking"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-btn font-semibold border-2 border-white/60 text-white backdrop-blur-sm transition-all hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-btn font-semibold border-2 border-white/60 text-white backdrop-blur-sm transition-all hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
             >
               {isArabic ? 'ابدأ الحجز' : 'Start booking'}
             </Link>
@@ -86,7 +86,7 @@ export default function Hero() {
         </div>
 
         {/* Stats bar */}
-        <div className="absolute bottom-8 left-0 right-0 flex flex-wrap justify-center gap-8 md:gap-16 px-6">
+        <div className="absolute bottom-8 left-0 right-0 flex flex-wrap justify-center gap-4 md:gap-16 px-6">
           {(isArabic
             ? [
                 { value: '+500', label: 'عقار موثق' },
@@ -103,7 +103,7 @@ export default function Hero() {
           ).map((stat) => (
             <div key={stat.label} className="text-center">
               <div
-                className="text-2xl font-semibold text-white"
+                className="text-lg md:text-2xl font-semibold text-white"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 {stat.value}

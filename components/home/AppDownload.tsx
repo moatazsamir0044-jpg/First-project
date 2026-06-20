@@ -44,11 +44,11 @@ export default function AppDownload() {
             </div>
 
             {/* Notify me */}
-            <div className="mt-6 flex gap-3 justify-center lg:justify-start">
+            <div className="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
               <input
                 type="email"
                 placeholder="Your email"
-                className="bg-white/10 border border-white/20 rounded-btn px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none focus:border-orange"
+                className="flex-1 min-w-0 bg-white/10 border border-white/20 rounded-btn px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none focus:border-orange"
               />
               <button className="bg-orange text-white font-semibold px-5 py-2.5 rounded-btn hover:bg-orange-dk transition-colors text-sm">
                 Notify Me
@@ -56,8 +56,8 @@ export default function AppDownload() {
             </div>
           </div>
 
-          {/* Phone mockup */}
-          <div className="relative shrink-0">
+          {/* Phone mockup — decorative, hidden on mobile */}
+          <div className="relative shrink-0 hidden lg:block">
             <div className="w-48 h-96 bg-white/10 rounded-[2.5rem] border-2 border-white/20 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
               <div className="absolute top-4 w-20 h-1.5 bg-white/20 rounded-full" />
               <div className="absolute bottom-4 w-12 h-1 bg-white/20 rounded-full" />

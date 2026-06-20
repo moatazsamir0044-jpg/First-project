@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import MashrabiyaPattern from '@/components/shared/MashrabiyaPattern'
+import SearchWidget from './SearchWidget'
 import { useLang } from '@/lib/language-context'
 
 const HERO_IMAGE = 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=85'
@@ -57,7 +58,7 @@ export default function Hero() {
               : 'Discover fully-furnished apartments and chalets in New Cairo, North Coast, El Gouna & Sheikh Zayed. No surprises. No hidden fees.'}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
             <Link
               href="/listings"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-btn font-semibold text-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent-primary)]"
@@ -76,6 +77,11 @@ export default function Hero() {
             >
               {isArabic ? 'ابدأ الحجز' : 'Start booking'}
             </Link>
+          </div>
+
+          {/* Search widget */}
+          <div className="w-full max-w-4xl mx-auto">
+            <SearchWidget />
           </div>
         </div>
 

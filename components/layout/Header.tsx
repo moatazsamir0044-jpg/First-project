@@ -2,13 +2,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Heart } from 'lucide-react'
 import { useLang } from '@/lib/language-context'
+import { useWishlist } from '@/lib/wishlist-context'
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { isArabic, toggleLang } = useLang()
+  const { wishlist } = useWishlist()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -67,6 +69,18 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/wishlist"
+            className="relative p-2 text-[var(--color-text)]/60 hover:text-[var(--color-accent-primary)] transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"
+            aria-label="Saved listings"
+          >
+            <Heart className="w-5 h-5" />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[var(--color-accent-primary)] text-white text-[10px] font-bold flex items-center justify-center">
+                {wishlist.length}
+              </span>
+            )}
+          </Link>
           <button
             onClick={toggleLang}
             className="text-sm font-medium text-[var(--color-text)]/60 hover:text-[var(--color-text)] px-3 py-1.5 border border-gray-200 rounded-pill transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"

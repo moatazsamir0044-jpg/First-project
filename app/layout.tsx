@@ -3,7 +3,9 @@ import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { LanguageProvider } from '@/lib/language-context'
+import { WishlistProvider } from '@/lib/wishlist-context'
 import FloatingButtons from '@/components/shared/FloatingButtons'
+import CompareBar from '@/components/shared/CompareBar'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://birdnestlife.com'
 
@@ -55,8 +57,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <LanguageProvider>
-          {children}
-          <FloatingButtons />
+          <WishlistProvider>
+            {children}
+            <FloatingButtons />
+            <CompareBar />
+          </WishlistProvider>
         </LanguageProvider>
         <Analytics />
         <SpeedInsights />

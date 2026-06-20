@@ -2,13 +2,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Heart, MapPin, Users, Bed, ShieldCheck } from 'lucide-react'
+import { Heart, MapPin, Users, Bed, ShieldCheck, GitCompareArrows } from 'lucide-react'
 import { clsx } from 'clsx'
 import { type Listing } from '@/lib/mock-data'
 import StarRating from '@/components/shared/StarRating'
 import RefundBadge from './RefundBadge'
 import UrgencyBadge from './UrgencyBadge'
 import { formatPrice } from '@/lib/formatters'
+import { useWishlist } from '@/lib/wishlist-context'
 
 interface ListingCardProps {
   listing: Listing
@@ -26,7 +27,9 @@ const ELIGIBILITY_LABELS: Record<string, { label: string; color: string }> = {
 }
 
 export default function ListingCard({ listing, className, checkIn, checkOut, guests, bookNow }: ListingCardProps) {
-  const [wishlisted, setWishlisted] = useState(false)
+  const { isWishlisted, toggle, isCompared, toggleCompare, wishlist } = useWishlist()
+  const wishlisted = isWishlisted(listing.id)
+  const compared = isCompared(listing.id)
   const [imgIdx, setImgIdx] = useState(0)
 
   const params = new URLSearchParams()
@@ -64,14 +67,29 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
           </div>
         )}
 
-        {/* Wishlist */}
-        <button
-          onClick={e => { e.preventDefault(); setWishlisted(!wishlisted) }}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow hover:scale-110 transition-transform"
-          aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
-        >
-          <Heart className={clsx('w-4 h-4 transition-colors', wishlisted ? 'fill-orange text-orange' : 'text-gray-500')} />
-        </button>
+        {/* Wishlist + Compare */}
+        <div className="absolute top-3 right-3 flex flex-col gap-1.5">
+          <button
+            onClick={e => { e.preventDefault(); toggle(listing.id) }}
+            className="w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow hover:scale-110 transition-transform"
+            aria-label={wishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
+          >
+            <Heart className={clsx('w-4 h-4 transition-colors', wishlisted ? 'fill-orange text-orange' : 'text-gray-500')} />
+          </button>
+          {wishlisted && (
+            <button
+              onClick={e => { e.preventDefault(); toggleCompare(listing.id) }}
+              className={clsx(
+                'w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center shadow hover:scale-110 transition-all',
+                compared ? 'bg-[var(--color-accent-secondary)] text-white' : 'bg-white/90 text-gray-500'
+              )}
+              aria-label={compared ? 'Remove from compare' : 'Add to compare'}
+              title={compared ? 'Remove from compare' : 'Add to compare'}
+            >
+              <GitCompareArrows className="w-4 h-4" />
+            </button>
+          )}
+        </div>
 
         {/* Urgency badge top-left */}
         <div className="absolute top-3 left-3 flex flex-col gap-1">

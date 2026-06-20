@@ -92,6 +92,60 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Team — E-E-A-T signals */}
+        <section className="py-16 md:py-20 bg-white border-t border-ink/5">
+          <div className="container-site">
+            <div className="text-center mb-12">
+              <p className="text-sm font-semibold text-orange mb-2 tracking-wide uppercase">The people behind BirdNest</p>
+              <h2 className="font-heading text-3xl font-semibold text-ink">Meet the Team</h2>
+              <p className="mt-3 text-ink/60 max-w-xl mx-auto text-sm">
+                Local experts who have lived and worked across Egypt's holiday destinations for years.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  name: 'Karim Hassan',
+                  role: 'Founder & CEO',
+                  bio: '12 years in Egyptian real estate. Previously Head of Residential at Emaar Egypt. Cairo-born, El Gouna regular.',
+                  initials: 'KH',
+                  color: 'bg-orange/15 text-orange',
+                },
+                {
+                  name: 'Yasmine Saleh',
+                  role: 'Head of Property',
+                  bio: 'Inspects every listing before it goes live. Former hospitality manager at Four Seasons Cairo. Speaks Arabic, English & French.',
+                  initials: 'YS',
+                  color: 'bg-[#237c58]/15 text-[#237c58]',
+                },
+                {
+                  name: 'Omar Fathy',
+                  role: 'Guest Experience Lead',
+                  bio: 'The person who picks up when you call at 2am. 8 years in customer operations. Knows every compound in New Cairo.',
+                  initials: 'OF',
+                  color: 'bg-sky/40 text-ink',
+                },
+                {
+                  name: 'Sara El-Masry',
+                  role: 'Content & SEO',
+                  bio: 'Writes our destination guides and keeps listings accurate. Former travel writer at Egypt Today. North Coast obsessed.',
+                  initials: 'SE',
+                  color: 'bg-orange/10 text-orange',
+                },
+              ].map(member => (
+                <div key={member.name} className="bg-cream rounded-card p-6 text-center">
+                  <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-lg font-bold ${member.color}`}>
+                    {member.initials}
+                  </div>
+                  <h3 className="font-heading text-base font-semibold text-ink mb-0.5">{member.name}</h3>
+                  <p className="text-xs text-orange font-medium mb-3">{member.role}</p>
+                  <p className="text-xs text-ink/60 leading-relaxed">{member.bio}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Partner logos */}
         <section className="py-12 bg-cream border-t border-ink/5">
           <div className="container-site">

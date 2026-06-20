@@ -7,16 +7,16 @@ export default function Hero() {
 
   const stats = isArabic
     ? [
-        { value: '+500', label: 'عقار' },
-        { value: '4', label: 'وجهات' },
+        { value: '+500', label: 'عقار موثق' },
+        { value: '+10,000', label: 'ضيف سعيد' },
         { value: '★4.8', label: 'متوسط التقييم' },
-        { value: '24/7', label: 'دعم' },
+        { value: '24/7', label: 'دعم باللغتين' },
       ]
     : [
-        { value: '500+', label: 'Properties' },
-        { value: '4', label: 'Destinations' },
-        { value: '4.8★', label: 'Avg Rating' },
-        { value: '24/7', label: 'Support' },
+        { value: '500+', label: 'Verified Properties' },
+        { value: '10,000+', label: 'Happy Guests' },
+        { value: '4.8★', label: 'Average Rating' },
+        { value: '24/7', label: 'Arabic & English Support' },
       ]
 
   return (

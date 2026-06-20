@@ -11,6 +11,7 @@ import AppDownload from '@/components/home/AppDownload'
 import PartnerLogos from '@/components/home/PartnerLogos'
 import TrustStrip from '@/components/home/TrustStrip'
 import HomeSchema from '@/components/home/HomeSchema'
+import NewsletterSection from '@/components/home/NewsletterSection'
 
 export default function HomePage() {
   return (
@@ -27,6 +28,7 @@ export default function HomePage() {
         <Testimonials />
         <AppDownload />
         <PartnerLogos />
+        <NewsletterSection />
       </main>
       <Footer />
       <CookieConsent />

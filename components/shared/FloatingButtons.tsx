@@ -37,9 +37,7 @@ function ChatPanel({
       <div className={`${bg} text-white px-4 py-3 flex items-center justify-between shrink-0 relative overflow-hidden`}>
         <MashrabiyaPattern opacity={0.12} tileSize={36} />
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden p-1.5">
-              <Image src="/images/logos/logo-icon.png" alt="Nesty" width={40} height={40} className="w-full h-full object-contain" />
-            </div>
+          <Image src="/images/logos/logo-icon.png" alt="Nesty" width={48} height={48} className="object-contain shrink-0" />
           <div>
             <p className="font-semibold text-sm">{title}</p>
             <p className="text-xs text-white/70">{subtitle}</p>

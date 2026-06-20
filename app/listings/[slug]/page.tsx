@@ -9,6 +9,7 @@ import ReviewsSection from '@/components/listing-detail/ReviewsSection'
 import AmenitiesGrid from '@/components/listing-detail/AmenitiesGrid'
 import EligibilityNotice from '@/components/listing-detail/EligibilityNotice'
 import SchemaMarkup from '@/components/listing-detail/SchemaMarkup'
+import MobileBookingBar from '@/components/listing-detail/MobileBookingBar'
 import ListingCard from '@/components/listings/ListingCard'
 import StarRating from '@/components/shared/StarRating'
 import { mockListings, mockReviews } from '@/lib/mock-data'
@@ -22,13 +23,17 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const listing = mockListings.find(l => l.slug === params.slug)
   if (!listing) return {}
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://birdnestlife.com'
   return {
-    title: `${listing.title} – BirdNest`,
+    title: listing.title,
     description: listing.description.slice(0, 160),
+    alternates: { canonical: `${siteUrl}/listings/${listing.slug}` },
     openGraph: {
-      title: listing.title,
+      title: `${listing.title} – BirdNest`,
       description: listing.description.slice(0, 160),
-      images: [listing.images[0]],
+      url: `${siteUrl}/listings/${listing.slug}`,
+      type: 'website',
+      images: [{ url: listing.images[0], width: 1200, height: 800, alt: listing.title }],
     },
   }
 }
@@ -50,12 +55,13 @@ export default function ListingDetailPage({ params }: { params: { slug: string }
   return (
     <>
       <SchemaMarkup listing={listing} reviews={displayReviews} />
+      <MobileBookingBar listing={listing} />
       <Header />
       <main>
         {/* Breadcrumb */}
         <div className="bg-cream py-3">
           <div className="container-site">
-            <nav className="flex items-center gap-2 text-xs text-ink/50">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-ink/50">
               <Link href="/" className="hover:text-orange transition-colors">Home</Link>
               <span>/</span>
               <Link href="/listings" className="hover:text-orange transition-colors">Listings</Link>
@@ -67,7 +73,7 @@ export default function ListingDetailPage({ params }: { params: { slug: string }
           </div>
         </div>
 
-        <div className="container-site py-8">
+        <div className="container-site py-8 pb-24 lg:pb-8">
           {/* Title section */}
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
             <div>

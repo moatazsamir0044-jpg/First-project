@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Link from 'next/link'
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://birdnestlife.com'
 
 const POSTS: Record<string, {
   title: string
@@ -11,6 +14,7 @@ const POSTS: Record<string, {
   category: string
   readTime: string
   publishedAt: string
+  modifiedAt: string
   image: string
   author: string
 }> = {
@@ -20,6 +24,7 @@ const POSTS: Record<string, {
     category: 'Destination Guide',
     readTime: '6 min',
     publishedAt: '2024-05-15',
+    modifiedAt: '2024-06-01',
     image: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=1200&q=80',
     author: 'BirdNest Team',
     content: `
@@ -68,6 +73,7 @@ Browse all New Cairo properties on BirdNest and use our filter to find exactly t
     category: 'Comparison',
     readTime: '8 min',
     publishedAt: '2024-06-01',
+    modifiedAt: '2024-06-15',
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80',
     author: 'BirdNest Team',
     content: `
@@ -81,7 +87,7 @@ Developed by Emaar, Marassi is the gold standard of North Coast development. Wit
 
 **Pros:**
 - Most facilities of any North Coast resort
-- Active marina with boat trips and water sports  
+- Active marina with boat trips and water sports
 - Diverse dining from casual to fine dining
 - Strong secondary rental market — good inventory
 
@@ -122,6 +128,7 @@ BirdNest has properties in both. Browse North Coast properties and use our locat
     category: 'Destination Guide',
     readTime: '10 min',
     publishedAt: '2024-06-10',
+    modifiedAt: '2024-07-01',
     image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80',
     author: 'BirdNest Team',
     content: `
@@ -176,6 +183,7 @@ Browse BirdNest's El Gouna properties for verified listings from private villas 
     category: 'Travel Tips',
     readTime: '5 min',
     publishedAt: '2024-06-20',
+    modifiedAt: '2024-07-10',
     image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80',
     author: 'BirdNest Team',
     content: `
@@ -228,6 +236,55 @@ For everything else — especially premium holiday properties across New Cairo, 
   },
 }
 
+function renderContent(content: string) {
+  const lines = content.trim().split('\n')
+  const elements: React.ReactNode[] = []
+  let listBuffer: string[] = []
+  let key = 0
+
+  const flushList = () => {
+    if (listBuffer.length > 0) {
+      elements.push(
+        <ul key={key++} className="list-disc ml-6 mb-4 space-y-1">
+          {listBuffer.map((item, i) => (
+            <li key={i} className="text-ink/80 leading-relaxed">{renderInline(item)}</li>
+          ))}
+        </ul>
+      )
+      listBuffer = []
+    }
+  }
+
+  const renderInline = (text: string): React.ReactNode => {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g)
+    return parts.map((part, i) =>
+      part.startsWith('**') && part.endsWith('**')
+        ? <strong key={i} className="font-semibold text-ink">{part.slice(2, -2)}</strong>
+        : part
+    )
+  }
+
+  for (const line of lines) {
+    if (line.startsWith('# ')) {
+      flushList()
+      elements.push(<h1 key={key++} className="font-heading text-3xl font-semibold text-ink mt-8 mb-4">{line.slice(2)}</h1>)
+    } else if (line.startsWith('## ')) {
+      flushList()
+      elements.push(<h2 key={key++} className="font-heading text-2xl font-semibold text-ink mt-8 mb-4">{line.slice(3)}</h2>)
+    } else if (line.startsWith('- ')) {
+      listBuffer.push(line.slice(2))
+    } else if (line === '') {
+      flushList()
+      elements.push(<br key={key++} />)
+    } else {
+      flushList()
+      elements.push(<p key={key++} className="mb-4 text-ink/80 leading-relaxed">{renderInline(line)}</p>)
+    }
+  }
+  flushList()
+  return elements
+}
+
 export async function generateStaticParams() {
   return Object.keys(POSTS).map(slug => ({ slug }))
 }
@@ -236,9 +293,18 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const post = POSTS[params.slug]
   if (!post) return {}
   return {
-    title: `${post.title} – BirdNest Blog`,
+    title: post.title,
     description: post.description,
-    openGraph: { title: post.title, description: post.description, images: [post.image] },
+    alternates: { canonical: `${siteUrl}/blog/${params.slug}` },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: 'article',
+      publishedTime: post.publishedAt,
+      modifiedTime: post.modifiedAt,
+      authors: [post.author],
+      images: [{ url: post.image, width: 1200, height: 630, alt: post.title }],
+    },
   }
 }
 
@@ -246,13 +312,63 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = POSTS[params.slug]
   if (!post) notFound()
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        '@id': `${siteUrl}/blog/${params.slug}#article`,
+        headline: post.title,
+        description: post.description,
+        image: { '@type': 'ImageObject', url: post.image, width: 1200, height: 630 },
+        datePublished: post.publishedAt,
+        dateModified: post.modifiedAt,
+        author: {
+          '@type': 'Organization',
+          name: post.author,
+          url: siteUrl,
+        },
+        publisher: {
+          '@type': 'Organization',
+          '@id': `${siteUrl}/#organization`,
+          name: 'BirdNest',
+          logo: { '@type': 'ImageObject', url: `${siteUrl}/images/logos/logo-dark.png` },
+        },
+        url: `${siteUrl}/blog/${params.slug}`,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/blog/${params.slug}` },
+        articleSection: post.category,
+        inLanguage: 'en',
+        timeRequired: `PT${post.readTime.replace(' min', 'M')}`,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
+          { '@type': 'ListItem', position: 3, name: post.title, item: `${siteUrl}/blog/${params.slug}` },
+        ],
+      },
+    ],
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Header />
       <main>
         {/* Hero */}
         <div className="relative h-64 md:h-96 overflow-hidden">
-          <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
           <div className="absolute inset-0 bg-ink/60" />
           <div className="absolute inset-0 flex items-end pb-8">
             <div className="container-site">
@@ -268,7 +384,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         {/* Breadcrumb */}
         <div className="bg-cream py-3">
           <div className="container-site">
-            <nav className="flex items-center gap-2 text-xs text-ink/50">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-ink/50">
               <Link href="/" className="hover:text-orange">Home</Link>
               <span>/</span>
               <Link href="/blog" className="hover:text-orange">Blog</Link>
@@ -286,17 +402,14 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                 <div className="flex items-center gap-3 mb-8 text-sm text-ink/50">
                   <span>By {post.author}</span>
                   <span>·</span>
-                  <span>{new Date(post.publishedAt).toLocaleDateString('en-EG', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                  <time dateTime={post.publishedAt}>
+                    {new Date(post.publishedAt).toLocaleDateString('en-EG', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  </time>
+                  <span>·</span>
+                  <span>{post.readTime} read</span>
                 </div>
-                <div className="prose prose-lg max-w-none text-ink/80 leading-relaxed">
-                  {post.content.trim().split('\n').map((line, i) => {
-                    if (line.startsWith('# ')) return <h1 key={i} className="font-heading text-3xl font-semibold text-ink mt-8 mb-4">{line.slice(2)}</h1>
-                    if (line.startsWith('## ')) return <h2 key={i} className="font-heading text-2xl font-semibold text-ink mt-8 mb-4">{line.slice(3)}</h2>
-                    if (line.startsWith('**') && line.endsWith('**')) return <p key={i} className="font-semibold text-ink">{line.slice(2, -2)}</p>
-                    if (line.startsWith('- ')) return <li key={i} className="ml-4 mb-1">{line.slice(2)}</li>
-                    if (line === '') return <br key={i} />
-                    return <p key={i} className="mb-4">{line}</p>
-                  })}
+                <div className="prose prose-lg max-w-none">
+                  {renderContent(post.content)}
                 </div>
               </article>
 

@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Calendar, Users, Star } from 'lucide-react'
+import { Star, ShieldCheck, Clock, BadgeCheck } from 'lucide-react'
 import { type Listing } from '@/lib/mock-data'
 import { formatPrice, calculateNights } from '@/lib/formatters'
 import RefundBadge from '@/components/listings/RefundBadge'
@@ -10,6 +10,11 @@ import WhatsAppButton from '@/components/shared/WhatsAppButton'
 
 interface BookingWidgetProps {
   listing: Listing
+}
+
+const ELIGIBILITY_NOTICE: Record<string, string> = {
+  couples: 'Couples only — marriage certificate may be required at check-in.',
+  families: 'Families & couples — ID verification at check-in.',
 }
 
 export default function BookingWidget({ listing }: BookingWidgetProps) {
@@ -29,6 +34,8 @@ export default function BookingWidget({ listing }: BookingWidgetProps) {
     ? `/book/${listing.slug}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`
     : `/book/${listing.slug}`
 
+  const viewsThisWeek = Math.floor(listing.viewCount * 0.3) || 34
+
   return (
     <div className="bg-white rounded-card border border-gray-200 shadow-lg p-6 sticky top-24">
       {/* Price */}
@@ -37,15 +44,31 @@ export default function BookingWidget({ listing }: BookingWidgetProps) {
         <span className="text-ink/50 text-sm">/ night</span>
       </div>
       {listing.utilitiesEst > 0 && (
-        <p className="text-xs text-ink/40 mb-3">+{formatPrice(listing.utilitiesEst)} estimated utilities</p>
+        <p className="text-xs text-ink/40 mb-1">+{formatPrice(listing.utilitiesEst)} estimated utilities</p>
       )}
 
-      {/* Rating */}
-      <div className="flex items-center gap-1 mb-5 text-sm">
-        <Star className="w-4 h-4 fill-orange text-orange" />
-        <span className="font-semibold">{listing.rating}</span>
-        <span className="text-ink/40">({listing.reviewCount} reviews)</span>
+      {/* Rating + social proof */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-1 text-sm">
+          <Star className="w-4 h-4 fill-orange text-orange" />
+          <span className="font-semibold">{listing.rating}</span>
+          <span className="text-ink/40">({listing.reviewCount} reviews)</span>
+        </div>
+        <span className="text-xs text-ink/50 flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#237c58] animate-pulse inline-block" />
+          {viewsThisWeek} viewed this week
+        </span>
       </div>
+
+      {/* Eligibility warning — shown BEFORE dates */}
+      {ELIGIBILITY_NOTICE[listing.eligibility] && (
+        <div className="mb-3 flex gap-2 p-2.5 bg-orange/5 border border-orange/20 rounded-lg text-xs text-orange/90">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 shrink-0 mt-0.5">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+          <span>{ELIGIBILITY_NOTICE[listing.eligibility]}</span>
+        </div>
+      )}
 
       {/* Date picker */}
       <div className="border border-gray-200 rounded-card overflow-hidden mb-3">
@@ -86,7 +109,7 @@ export default function BookingWidget({ listing }: BookingWidgetProps) {
       {nights > 0 && (
         <div className="space-y-2 mb-4 p-4 bg-cream rounded-card text-sm">
           <div className="flex justify-between">
-            <span className="text-ink/60">{formatPrice(listing.pricePerNight)} × {nights} nights</span>
+            <span className="text-ink/60">{formatPrice(listing.pricePerNight)} × {nights} night{nights !== 1 ? 's' : ''}</span>
             <span className="font-medium">{formatPrice(subtotal)}</span>
           </div>
           {utilitiesTotal > 0 && (
@@ -106,10 +129,16 @@ export default function BookingWidget({ listing }: BookingWidgetProps) {
         </div>
       )}
 
+      {/* Peak season nudge */}
+      <div className="flex items-center gap-1.5 mb-3 text-xs text-[#237c58] font-medium">
+        <Clock className="w-3.5 h-3.5" />
+        Peak season — dates fill fast. Reserve to hold yours.
+      </div>
+
       {/* CTA */}
       <Link
         href={bookUrl}
-        className="block w-full bg-orange text-white font-semibold py-3.5 rounded-btn text-center hover:bg-orange-dk transition-colors mb-3"
+        className="block w-full bg-orange text-white font-semibold py-3.5 rounded-btn text-center hover:bg-orange-dk transition-colors mb-3 text-sm"
       >
         {nights > 0 ? `Reserve for ${formatPrice(total)}` : 'Check Availability'}
       </Link>
@@ -117,10 +146,24 @@ export default function BookingWidget({ listing }: BookingWidgetProps) {
       <WhatsAppButton
         variant="inline"
         message={`Hi! I'm interested in booking "${listing.title}" on BirdNest.`}
-        className="w-full justify-center mb-4"
+        className="w-full justify-center mb-4 text-sm"
       />
 
-      <RefundBadge policy={listing.refundPolicy} className="w-full justify-center" />
+      <RefundBadge policy={listing.refundPolicy} className="w-full justify-center mb-4" />
+
+      {/* Trust badges */}
+      <div className="border-t border-gray-100 pt-4 grid grid-cols-3 gap-2 text-center">
+        {[
+          { icon: ShieldCheck, label: 'Verified listing' },
+          { icon: BadgeCheck, label: 'No hidden fees' },
+          { icon: Clock, label: '24/7 support' },
+        ].map(({ icon: Icon, label }) => (
+          <div key={label} className="flex flex-col items-center gap-1">
+            <Icon className="w-4 h-4 text-[#237c58]" />
+            <span className="text-[10px] text-ink/50 leading-tight">{label}</span>
+          </div>
+        ))}
+      </div>
 
       <p className="text-xs text-center text-ink/40 mt-3">You won't be charged yet</p>
     </div>

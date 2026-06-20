@@ -4,9 +4,18 @@ import Footer from '@/components/layout/Footer'
 import Link from 'next/link'
 import WhatsAppButton from '@/components/shared/WhatsAppButton'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://birdnestlife.com'
+
 export const metadata: Metadata = {
   title: 'How BirdNest Works – Book with Confidence',
-  description: 'Learn how BirdNest makes booking holiday homes in Egypt simple, safe, and transparent.',
+  description: 'Learn how BirdNest makes booking holiday homes in Egypt simple, safe, and transparent. Verified listings, transparent pricing, 24/7 support.',
+  alternates: { canonical: `${siteUrl}/how-it-works` },
+  openGraph: {
+    title: 'How BirdNest Works – Book with Confidence',
+    description: 'Learn how BirdNest makes booking holiday homes in Egypt simple, safe, and transparent.',
+    url: `${siteUrl}/how-it-works`,
+    images: [{ url: `${siteUrl}/og-image.jpg`, width: 1200, height: 630 }],
+  },
 }
 
 const FAQS = [

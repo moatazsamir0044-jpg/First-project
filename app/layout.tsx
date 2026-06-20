@@ -20,7 +20,6 @@ export const metadata: Metadata = {
     description: 'Book fully-furnished, verified apartments across Egypt. New Cairo, Sheikh Zayed, North Coast & El Gouna. Transparent pricing, no surprise fees.',
     url: siteUrl,
     siteName: 'BirdNest',
-    images: [{ url: `${siteUrl}/og-image.jpg`, width: 1200, height: 630, alt: 'BirdNest – Holiday Homes in Egypt' }],
     type: 'website',
     locale: 'en_EG',
   },
@@ -28,7 +27,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'BirdNest – Holiday Homes in Egypt',
     description: 'Serviced Apartments & Holiday Homes in Egypt. New Cairo, North Coast, El Gouna & Sheikh Zayed.',
-    images: [{ url: `${siteUrl}/og-image.jpg`, width: 1200, height: 630 }],
   },
   alternates: {
     canonical: siteUrl,
@@ -44,9 +42,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <link rel="preload" href="/fonts/Recoleta-SemiBold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/Gilroy-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/Gilroy-SemiBold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Recoleta-SemiBold.otf" as="font" type="font/otf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Gilroy-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Gilroy-SemiBold.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />

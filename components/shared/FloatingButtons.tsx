@@ -37,8 +37,8 @@ function ChatPanel({
       <div className={`${bg} text-white px-4 py-3 flex items-center justify-between shrink-0 relative overflow-hidden`}>
         <MashrabiyaPattern opacity={0.12} tileSize={36} />
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center overflow-hidden p-1">
-              <Image src="/images/logos/logo-icon.png" alt="Nesty" width={24} height={24} className="w-full h-full object-contain" />
+          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden p-1.5">
+              <Image src="/images/logos/logo-icon.png" alt="Nesty" width={40} height={40} className="w-full h-full object-contain" />
             </div>
           <div>
             <p className="font-semibold text-sm">{title}</p>
@@ -233,7 +233,7 @@ export default function FloatingButtons() {
             {blogNotif && !blogOpen && (
               <div className="absolute bottom-16 right-0 bg-white rounded-[14px] shadow-xl border border-gray-100 p-3 w-52">
                 <button onClick={() => setBlogNotif(false)} className="absolute top-1.5 right-2 text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
-                <p className="text-xs font-semibold text-[#292a2b] mb-0.5 flex items-center gap-1.5"><Image src="/images/logos/logo-icon.png" alt="" width={14} height={14} className="inline-block" /> Nesty Travel Guide</p>
+                <p className="text-xs font-semibold text-[#292a2b] mb-0.5 flex items-center gap-1.5"><Image src="/images/logos/logo-icon.png" alt="" width={18} height={18} className="inline-block" /> Nesty Travel Guide</p>
                 <p className="text-xs text-[#292a2b]/60 leading-relaxed">Tell me about your Egypt trip and I'll suggest the best reads!</p>
                 <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white border-r border-b border-gray-100 rotate-45" />
               </div>
@@ -258,7 +258,7 @@ export default function FloatingButtons() {
             {listingsNotif && !listingsOpen && (
               <div className="absolute bottom-16 right-0 bg-white rounded-[14px] shadow-xl border border-gray-100 p-3 w-52">
                 <button onClick={() => setListingsNotif(false)} className="absolute top-1.5 right-2 text-gray-300 hover:text-gray-500 text-lg leading-none">×</button>
-                <p className="text-xs font-semibold text-[#292a2b] mb-0.5 flex items-center gap-1.5"><Image src="/images/logos/logo-icon.png" alt="" width={14} height={14} className="inline-block" /> Meet Nesty!</p>
+                <p className="text-xs font-semibold text-[#292a2b] mb-0.5 flex items-center gap-1.5"><Image src="/images/logos/logo-icon.png" alt="" width={18} height={18} className="inline-block" /> Meet Nesty!</p>
                 <p className="text-xs text-[#292a2b]/60 leading-relaxed">Tell me what you want and I'll find your perfect nest.</p>
                 <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white border-r border-b border-gray-100 rotate-45" />
               </div>

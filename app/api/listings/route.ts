@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { getActiveListings } from '@/lib/listings'
 
+// DB-backed: run per-request, never prerender at build time.
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const area = searchParams.get('area')

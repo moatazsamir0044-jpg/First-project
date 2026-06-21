@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
-import { mockListings } from '@/lib/mock-data'
+import { getActiveListings } from '@/lib/listings'
+
+// DB-backed: run per-request, never prerender at build time.
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -7,7 +10,8 @@ export async function GET(request: Request) {
 
   if (!q || q.length < 2) return NextResponse.json({ results: [] })
 
-  const results = mockListings.filter(l =>
+  const listings = await getActiveListings()
+  const results = listings.filter(l =>
     l.title.toLowerCase().includes(q) ||
     l.location.toLowerCase().includes(q) ||
     l.area.toLowerCase().includes(q) ||

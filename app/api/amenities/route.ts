@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
-import { mockListings } from '@/lib/mock-data'
+import { getActiveListings } from '@/lib/listings'
 
 export async function GET() {
-  const allAmenities = mockListings.flatMap(l => l.amenities)
+  const listings = await getActiveListings()
+  const allAmenities = listings.flatMap(l => l.amenities)
   const unique = [...new Set(allAmenities)].sort()
   return NextResponse.json(unique)
 }

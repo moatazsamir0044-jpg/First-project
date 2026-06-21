@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { mockListings } from '@/lib/mock-data'
+import { rateLimit, clientKey } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ message: "Nesty is not configured yet. Please contact us via WhatsApp!", matchingListings: [], filters: {} })
   }
+  // Rate limit AI calls to control cost/abuse: 15 messages/min per IP
+  const rl = rateLimit(clientKey(req, 'chat'), { limit: 15, windowMs: 60_000 })
+  if (!rl.allowed) {
+    return NextResponse.json({ message: "You're sending messages too fast — give Nesty a moment! 🪺", matchingListings: [], filters: {} }, { status: 429 })
+  }
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   try {
     const { message, conversationHistory = [] } = await req.json()
+
+    // Cap input size to prevent prompt-stuffing / runaway cost
+    if (typeof message !== 'string' || message.length === 0 || message.length > 1000) {
+      return NextResponse.json({ message: 'Please keep your message short and try again.', matchingListings: [], filters: {} }, { status: 400 })
+    }
 
     const listingsSummary = mockListings.map(l => ({
       id: l.id,

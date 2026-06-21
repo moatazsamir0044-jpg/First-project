@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { mockListings } from '@/lib/mock-data'
+import { getActiveListings } from '@/lib/listings'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const maxPrice = searchParams.get('maxPrice')
   const guests = searchParams.get('guests')
 
-  let listings = mockListings.filter(l => l.isActive)
+  let listings = await getActiveListings()
 
   if (area) {
     listings = listings.filter(l =>

@@ -7,7 +7,14 @@ export function formatDate(date: Date | string): string {
 }
 
 export function generateBookingRef(): string {
-  return 'BN-' + Math.random().toString(36).substring(2, 8).toUpperCase()
+  // Cryptographically secure, non-guessable reference (avoids Math.random enumeration)
+  const bytes = crypto.getRandomValues(new Uint8Array(6))
+  const ref = Array.from(bytes)
+    .map((b) => (b % 36).toString(36))
+    .join('')
+    .slice(0, 8)
+    .toUpperCase()
+  return 'BN-' + ref
 }
 
 export function calculateNights(checkIn: Date, checkOut: Date): number {

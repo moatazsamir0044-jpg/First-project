@@ -1,8 +1,11 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = 'BirdNest <noreply@birdnestlife.com>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'hello@birdnestlife.com'
+
+function getResend(): Resend {
+  return new Resend(process.env.RESEND_API_KEY)
+}
 
 export async function sendBookingConfirmation(booking: {
   reference: string
@@ -24,7 +27,7 @@ export async function sendBookingConfirmation(booking: {
 
   if (!process.env.RESEND_API_KEY) return
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: booking.guestEmail,
     subject: `Booking Confirmed — ${booking.reference} | BirdNest`,
@@ -79,7 +82,7 @@ export async function sendBookingNotificationToAdmin(booking: {
   const formatPrice = (n: number) =>
     new Intl.NumberFormat('en-EG', { style: 'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(n)
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: ADMIN_EMAIL,
     subject: `New Booking ${booking.reference} — ${booking.listingTitle}`,
@@ -108,7 +111,7 @@ export async function sendContactNotification(data: {
   if (!process.env.RESEND_API_KEY) return
 
   await Promise.all([
-    resend.emails.send({
+    getResend().emails.send({
       from: FROM,
       to: ADMIN_EMAIL,
       subject: `New Contact — ${data.enquiryType} from ${data.name}`,
@@ -123,7 +126,7 @@ export async function sendContactNotification(data: {
         </div>
       `,
     }),
-    resend.emails.send({
+    getResend().emails.send({
       from: FROM,
       to: data.email,
       subject: `We got your message — BirdNest`,
@@ -155,7 +158,7 @@ export async function sendBookingCancellation(booking: {
   const formatPrice = (n: number) =>
     new Intl.NumberFormat('en-EG', { style: 'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(n)
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: booking.guestEmail,
     subject: `Booking Cancelled — ${booking.reference} | BirdNest`,

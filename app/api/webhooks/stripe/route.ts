@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
-
-export const dynamic = 'force-dynamic'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { sendBookingConfirmation, sendBookingCancellation } from '@/lib/email'
 import { calculateNights } from '@/lib/formatters'
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
 
   let event
   try {
+    const stripe = getStripe()
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET)
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Unknown error'
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
           })
 
           const nights = calculateNights(booking.checkIn, booking.checkOut)
-          await sendBookingConfirmation({
+          sendBookingConfirmation({
             reference: booking.reference,
             guestName: booking.guestName,
             guestEmail: booking.guestEmail,
@@ -56,7 +57,6 @@ export async function POST(request: Request) {
             pricePerNight: booking.listing.pricePerNight,
           }).catch(console.error)
         } else if (meta.listingId && meta.guestEmail) {
-          // Booking may not be created yet — it will be created via /api/bookings with the payment ID
           console.log('Payment succeeded for unregistered booking, metadata:', meta)
         }
         break
@@ -81,11 +81,11 @@ export async function POST(request: Request) {
             where: { id: booking.id },
             data: { status: 'cancelled' },
           })
-          await sendBookingCancellation({
+          sendBookingCancellation({
             reference: booking.reference,
             guestName: booking.guestName,
             guestEmail: booking.guestEmail,
-            listingTitle: booking.reference,
+            listingTitle: booking.listing.title ?? booking.reference,
             refundAmount: Math.round(charge.amount_refunded / 100),
           }).catch(console.error)
         }

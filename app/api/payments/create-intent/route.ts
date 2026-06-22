@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-
-export const dynamic = 'force-dynamic'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { calculateNights } from '@/lib/formatters'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+
+export const dynamic = 'force-dynamic'
 
 const intentSchema = z.object({
   listingId: z.string(),
@@ -56,10 +56,9 @@ export async function POST(request: Request) {
 
   const subtotal = listing.pricePerNight * nights
   const total = subtotal + listing.cleaningFee + listing.utilitiesEst
-
-  // Stripe amounts are in smallest currency unit (piastres for EGP = 1/100 EGP)
   const amountInPiastres = total * 100
 
+  const stripe = getStripe()
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amountInPiastres,
     currency: 'egp',

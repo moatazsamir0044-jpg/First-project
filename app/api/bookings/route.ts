@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+
+export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { generateBookingRef, calculateNights } from '@/lib/formatters'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'

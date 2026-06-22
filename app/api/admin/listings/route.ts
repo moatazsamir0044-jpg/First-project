@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 function requireAdminKey(request: Request): boolean {
   return request.headers.get('x-admin-key') === process.env.ADMIN_SECRET_KEY
 }

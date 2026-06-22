@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+
+export const dynamic = 'force-dynamic'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { calculateNights } from '@/lib/formatters'

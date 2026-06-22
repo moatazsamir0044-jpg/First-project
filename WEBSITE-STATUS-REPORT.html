@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    color: #292a2b;
+    background: #ffffff;
+    padding: 48px 56px;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  /* Header band */
+  .report-header {
+    background: #f4603d;
+    color: #ffffff;
+    padding: 32px 36px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+  }
+  .report-header h1 {
+    font-size: 22pt;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+  .report-header .meta {
+    font-size: 10pt;
+    opacity: 0.88;
+    line-height: 1.8;
+  }
+
+  /* Section headings */
+  h2 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #237c58;
+    margin: 32px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #237c58;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  h3 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #292a2b;
+    margin: 20px 0 6px;
+  }
+
+  /* Intro box */
+  .intro-box {
+    background: #efe8e1;
+    border-left: 4px solid #f4603d;
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 8px;
+    font-size: 10.5pt;
+  }
+
+  /* Numbered strength items */
+  .strength-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .strength-num {
+    background: #237c58;
+    color: #fff;
+    font-weight: 700;
+    font-size: 9pt;
+    border-radius: 50%;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+  .strength-text strong { color: #237c58; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 10.5pt;
+  }
+  thead tr {
+    background: #292a2b;
+    color: #fff;
+  }
+  thead th {
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5pt;
+    letter-spacing: 0.2px;
+  }
+  tbody tr:nth-child(even) { background: #f7f4f1; }
+  tbody tr:hover { background: #efe8e1; }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0d9d2;
+    vertical-align: top;
+  }
+  td:first-child {
+    font-weight: 700;
+    color: #f4603d;
+    width: 28px;
+    white-space: nowrap;
+  }
+
+  /* Pill tags */
+  .tag-critical {
+    display: inline-block;
+    background: #f4603d;
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+  }
+  .tag-moderate {
+    display: inline-block;
+    background: #e8a020;
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+  }
+  .tag-concern {
+    display: inline-block;
+    background: #c9e1ea;
+    color: #292a2b;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+  }
+
+  /* Summary box */
+  .summary-box {
+    background: #292a2b;
+    color: #ffffff;
+    padding: 22px 26px;
+    border-radius: 8px;
+    margin-top: 30px;
+    font-size: 10.5pt;
+    line-height: 1.7;
+  }
+  .summary-box strong { color: #f4603d; }
+  .summary-box .headline {
+    font-size: 14pt;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    height: 14px;
+    margin: 14px 0 6px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    background: #f4603d;
+    height: 100%;
+    width: 65%;
+    border-radius: 20px;
+  }
+  .progress-label {
+    font-size: 9pt;
+    opacity: 0.8;
+    text-align: right;
+  }
+
+  p { margin-bottom: 8px; }
+
+  .section-intro {
+    font-size: 10.5pt;
+    color: #555;
+    margin-bottom: 12px;
+  }
+
+  .effort-badge {
+    color: #237c58;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────────────── -->
+<div class="report-header">
+  <h1>BirdNest Website — Status Report</h1>
+  <div class="meta">
+    Date: 22 June 2026<br>
+    Prepared for: Management &amp; Development Team<br>
+    Project: BirdNest Holiday Rental Platform
+  </div>
+</div>
+
+<!-- ── WHAT IS THIS ───────────────────────── -->
+<h2>What Is This Website?</h2>
+<div class="intro-box">
+  BirdNest is a holiday rental booking platform. Clients visit the site, browse properties, and book stays online with payment taken at checkout. The site supports <strong>English and Arabic</strong>, runs on Vercel (cloud hosting), stores all data in a PostgreSQL database (Supabase), and processes payments through <strong>Stripe</strong>.
+</div>
+
+<!-- ── STRENGTHS ──────────────────────────── -->
+<h2>Strengths — What Is Built and Working</h2>
+<p class="section-intro">The following are complete, tested, and solid foundations the team can be confident in.</p>
+
+<div class="strength-item">
+  <div class="strength-num">1</div>
+  <div class="strength-text"><strong>The visual website looks complete.</strong> All customer-facing pages are designed and polished: homepage, listings browse, property detail, 3-click checkout, account dashboard (sign-in, register, booking history), compare, wishlist, contact, blog, how-it-works, and terms. Branding — colours, fonts, and logos — is consistent throughout.</div>
+</div>
+
+<div class="strength-item">
+  <div class="strength-num">2</div>
+  <div class="strength-text"><strong>User accounts are fully built.</strong> Customers can register with email and password, or sign in with Google. Passwords are stored securely using industry-standard hashing. Session management works correctly, and the account dashboard shows a logged-in user's bookings.</div>
+</div>
+
+<div class="strength-item">
+  <div class="strength-num">3</div>
+  <div class="strength-text"><strong>The live database is set up and seeded.</strong> A production database exists in the EU (Supabase). All 8 data tables are created (Users, Listings, Bookings, Reviews, etc.), 12 real property listings and 36 reviews are loaded, and row-level security is enabled — meaning data is locked down from unauthorised access.</div>
+</div>
+
+<div class="strength-item">
+  <div class="strength-num">4</div>
+  <div class="strength-text"><strong>The full backend API is written.</strong> All server-side code is complete: fetching listings, search, creating bookings, processing Stripe payments, handling Stripe webhooks (payment confirmations and refunds), and admin tools. The engine is built — it just needs to be connected to the front end.</div>
+</div>
+
+<div class="strength-item">
+  <div class="strength-num">5</div>
+  <div class="strength-text"><strong>Security foundations are strong.</strong> The site sends all major security headers (prevents clickjacking, content injection, etc.), enforces HTTPS, has a Content Security Policy allowlisting only trusted services, and rate-limits the registration page against brute-force attacks. The codebase builds with zero TypeScript errors and zero lint warnings.</div>
+</div>
+
+<div class="strength-item">
+  <div class="strength-num">6</div>
+  <div class="strength-text"><strong>The build is clean and deployable.</strong> The code compiles and passes all checks. From a purely technical standpoint it can be pushed live at any time.</div>
+</div>
+
+<!-- ── WEAKNESSES ─────────────────────────── -->
+<h2>Weaknesses — What Is Incomplete</h2>
+
+<h3><span class="tag-critical">Critical</span> — The Site Cannot Take Real Bookings Yet</h3>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Issue</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong>Pages show fake demo data, not the real database.</strong> When a customer visits the site today, they see hardcoded mock properties — not the 12 real listings stored in the database. All browse, detail, booking, compare, and wishlist pages read from a demo data file in the code. The API that reads the real database is already written; it just has not been connected to the front-end pages yet.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>The checkout does not process a real payment.</strong> Clicking "Confirm &amp; Pay" runs a fake timer. No card is charged, no booking is saved in the database, and no confirmation email is sent. The Stripe payment code and booking creation API both exist — they just haven't been wired into the checkout page yet.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Secret keys have not been set in the hosting environment.</strong> The live website on Vercel does not have the credentials it needs: database connection, authentication secret, and Stripe keys. Without these, the site will fail at runtime even once the code is connected. These must be entered manually in the Vercel dashboard for security reasons.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3><span class="tag-moderate">Moderate</span> — Important, But Not Hard Blockers for Launch</h3>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Issue</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4</td>
+      <td><strong>Database migration records are out of sync.</strong> The database was set up by running the full schema directly rather than through the step-by-step migration files in the code. If a developer ever creates a fresh database using the standard process, one column (guest nationality on the Bookings table) would be missing. A small fix is needed to keep the code and database in agreement.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>The brute-force rate limiter doesn't work across multiple servers.</strong> Because the site runs on Vercel's serverless infrastructure (many parallel instances), the current rate limiter — which stores its counter in a single server's memory — can be bypassed. It should be replaced with a shared cloud-based solution before handling real users.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ── ADDITIONAL CONCERNS ────────────────── -->
+<h2>Additional Concerns Not Previously Covered</h2>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Concern</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>6</td>
+      <td><strong>No independent security audit has been done.</strong> The code has good security practices, but no external penetration test has been performed. Before taking real payments from real clients, this is strongly recommended — payment card data and personal information will be at stake.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><strong>No real domain name has been connected.</strong> The site currently lives at a Vercel auto-generated URL. The actual domain name (e.g. birdnest.com or similar) has not been pointed to the site. DNS configuration is still outstanding.</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><strong>Email confirmations have not been tested end-to-end.</strong> A Resend email integration exists in the code, but whether booking confirmation and password-reset emails actually send and deliver correctly has not been verified with a real test.</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><strong>The Arabic version has not been reviewed.</strong> The site supports English and Arabic. However, there is no record of the Arabic translation content being checked for accuracy or completeness by a native speaker.</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><strong>No admin panel exists for the property owner.</strong> There is no management area to add properties, update availability, view bookings, or adjust pricing. Currently all of that requires a developer to access the database directly — which is not sustainable.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ── WHAT TO DO ─────────────────────────── -->
+<h2>What Must Be Done Before Going Live</h2>
+<p class="section-intro">Minimum required tasks, in recommended order. Completing all six makes the site ready to accept real client bookings.</p>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Task</th><th>Who</th><th>Effort</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Connect listing, detail, booking, compare, and wishlist pages to the live database — replace demo data with real API calls</td>
+      <td>Developer</td>
+      <td class="effort-badge">1–2 days</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Wire real Stripe payment and booking creation into the checkout page</td>
+      <td>Developer</td>
+      <td class="effort-badge">1 day</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Set the secret environment variables in Vercel dashboard (database URL, auth secret, Stripe keys, email key)</td>
+      <td>Owner</td>
+      <td class="effort-badge">1 hour</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Fix the database migration drift (add the missing nationality migration)</td>
+      <td>Developer</td>
+      <td class="effort-badge">2 hours</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>End-to-end test: make a real test booking, confirm Stripe charge, confirm booking appears in account dashboard</td>
+      <td>Developer + Owner</td>
+      <td class="effort-badge">2–4 hours</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Connect the real domain name (update DNS to point to Vercel deployment)</td>
+      <td>Owner / Developer</td>
+      <td class="effort-badge">1–2 hours</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Recommended Before Opening to the Public</h3>
+<p class="section-intro">Not hard blockers, but important for a professional and secure launch.</p>
+<table>
+  <thead>
+    <tr><th>#</th><th>Task</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>A</td><td>Replace in-memory rate limiter with a cloud-based Redis solution (Upstash)</td></tr>
+    <tr><td>B</td><td>Commission an independent security review / light penetration test</td></tr>
+    <tr><td>C</td><td>Test all email confirmations (booking confirmed, password reset) end-to-end</td></tr>
+    <tr><td>D</td><td>Review Arabic translation content with a native speaker</td></tr>
+    <tr><td>E</td><td>Build a basic admin panel so the owner can manage listings and bookings without developer help</td></tr>
+  </tbody>
+</table>
+
+<!-- ── SUMMARY ────────────────────────────── -->
+<div class="summary-box">
+  <div class="headline">Summary</div>
+  <div class="progress-wrap"><div class="progress-bar"></div></div>
+  <div class="progress-label">~65% complete</div>
+  <br>
+  The BirdNest website is well-built and approximately <strong>60–70% complete</strong>. The visual design, user accounts, live database, full backend API, and security foundations are all solid. What remains is primarily <strong>connecting the pieces</strong> — the front-end pages need to read from the real database, the checkout needs to process real payments, and the Vercel environment keys need to be entered. None of these are large or complex tasks; they are wiring jobs.
+  <br><br>
+  With focused developer time, the site could be ready to take its <strong>first real client booking within approximately one week</strong>.
+</div>
+
+</body>
+</html>

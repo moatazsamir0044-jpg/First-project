@@ -84,11 +84,15 @@ export default function ListingDetailPage({ params }: { params: { slug: string }
                   {listing.location}, {listing.area}
                 </span>
                 <span>·</span>
-                <div className="flex items-center gap-1">
-                  <StarRating rating={listing.rating} size="sm" />
-                  <span className="font-semibold text-ink">{listing.rating}</span>
-                  <span>({listing.reviewCount} reviews)</span>
-                </div>
+                {listing.reviewCount > 0 ? (
+                  <div className="flex items-center gap-1">
+                    <StarRating rating={listing.rating} size="sm" />
+                    <span className="font-semibold text-ink">{listing.rating}</span>
+                    <span>({listing.reviewCount} reviews)</span>
+                  </div>
+                ) : (
+                  <span className="font-semibold text-[#237c58]">New listing</span>
+                )}
               </div>
             </div>
           </div>

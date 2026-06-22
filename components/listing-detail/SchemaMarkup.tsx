@@ -41,13 +41,15 @@ export default function SchemaMarkup({ listing, reviews }: SchemaMarkupProps) {
             longitude: listing.longitude,
           },
         }),
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: listing.rating,
-          reviewCount: listing.reviewCount,
-          bestRating: 5,
-          worstRating: 1,
-        },
+        ...(listing.reviewCount > 0 && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: listing.rating,
+            reviewCount: listing.reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }),
         review: reviews.slice(0, 5).map(r => ({
           '@type': 'Review',
           reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },

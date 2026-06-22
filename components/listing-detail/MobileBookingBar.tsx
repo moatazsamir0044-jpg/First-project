@@ -18,9 +18,15 @@ export default function MobileBookingBar({ listing }: MobileBookingBarProps) {
             <span className="text-xs text-ink/50">/ night</span>
           </div>
           <div className="flex items-center gap-1 text-xs text-ink/50">
-            <Star className="w-3 h-3 fill-orange text-orange" />
-            <span className="font-medium">{listing.rating}</span>
-            <span>({listing.reviewCount})</span>
+            {listing.reviewCount > 0 ? (
+              <>
+                <Star className="w-3 h-3 fill-orange text-orange" />
+                <span className="font-medium">{listing.rating}</span>
+                <span>({listing.reviewCount})</span>
+              </>
+            ) : (
+              <span className="font-medium text-[#237c58]">New</span>
+            )}
           </div>
         </div>
         <Link

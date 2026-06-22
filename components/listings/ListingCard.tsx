@@ -137,11 +137,15 @@ export default function ListingCard({ listing, className, checkIn, checkOut, gue
         </div>
 
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-1.5">
-            <StarRating rating={listing.rating} size="sm" />
-            <span className="text-xs font-semibold text-ink">{listing.rating}</span>
-            <span className="text-xs text-ink/40">({listing.reviewCount})</span>
-          </div>
+          {listing.reviewCount > 0 ? (
+            <div className="flex items-center gap-1.5">
+              <StarRating rating={listing.rating} size="sm" />
+              <span className="text-xs font-semibold text-ink">{listing.rating}</span>
+              <span className="text-xs text-ink/40">({listing.reviewCount})</span>
+            </div>
+          ) : (
+            <span className="text-xs font-semibold text-[#237c58]">New</span>
+          )}
           <RefundBadge policy={listing.refundPolicy} />
         </div>
 

@@ -50,9 +50,15 @@ export default function BookingWidget({ listing }: BookingWidgetProps) {
       {/* Rating + social proof */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-1 text-sm">
-          <Star className="w-4 h-4 fill-orange text-orange" />
-          <span className="font-semibold">{listing.rating}</span>
-          <span className="text-ink/40">({listing.reviewCount} reviews)</span>
+          {listing.reviewCount > 0 ? (
+            <>
+              <Star className="w-4 h-4 fill-orange text-orange" />
+              <span className="font-semibold">{listing.rating}</span>
+              <span className="text-ink/40">({listing.reviewCount} reviews)</span>
+            </>
+          ) : (
+            <span className="font-semibold text-[#237c58]">New listing</span>
+          )}
         </div>
         <span className="text-xs text-ink/50 flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-[#237c58] animate-pulse inline-block" />

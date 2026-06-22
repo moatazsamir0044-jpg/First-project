@@ -21,6 +21,7 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
 }
 
@@ -38,8 +39,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          String    @default("user")
   accounts      Account[]
   sessions      Session[]
+  bookings      Booking[]
   createdAt     DateTime  @default(now())
 }
 
@@ -47,6 +50,7 @@ model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
+
   @@unique([identifier, token])
 }
 
@@ -80,6 +84,11 @@ model Listing {
   createdAt     DateTime  @default(now())
   bookings      Booking[]
   reviews       Review[]
+
+  @@index([area])
+  @@index([isActive])
+  @@index([pricePerNight])
+  @@index([rating])
 }
 
 model Booking {
@@ -87,6 +96,8 @@ model Booking {
   reference       String   @unique
   listingId       String
   listing         Listing  @relation(fields: [listingId], references: [id])
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
   guestName       String
   guestEmail      String
   guestPhone      String
@@ -100,6 +111,11 @@ model Booking {
   eligibilityType String
   specialRequests String?
   createdAt       DateTime @default(now())
+
+  @@index([listingId])
+  @@index([guestEmail])
+  @@index([status])
+  @@index([checkIn, checkOut])
 }
 
 model Review {
@@ -112,6 +128,9 @@ model Review {
   comment       String
   source        String   @default("BirdNest")
   createdAt     DateTime @default(now())
+
+  @@index([listingId])
+  @@index([rating])
 }
 
 model ContactSubmission {
@@ -121,4 +140,6 @@ model ContactSubmission {
   enquiryType String
   message     String
   createdAt   DateTime @default(now())
+
+  @@index([createdAt])
 }

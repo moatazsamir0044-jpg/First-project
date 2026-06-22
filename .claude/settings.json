@@ -1,4 +1,7 @@
 {
+  "env": {
+    "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH": "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"
+  },
   "hooks": {
     "PreToolUse": [
       {

@@ -19,7 +19,7 @@ const bookingSchema = z.object({
   totalPrice: z.number().int().positive(),
   eligibilityType: z.string().min(1),
   specialRequests: z.string().max(1000).optional(),
-  stripePaymentId: z.string().optional(),
+  paymobOrderId: z.string().optional(),
 })
 
 export async function POST(request: Request) {
@@ -93,8 +93,8 @@ export async function POST(request: Request) {
       totalPrice: data.totalPrice,
       eligibilityType: data.eligibilityType,
       specialRequests: data.specialRequests,
-      stripePaymentId: data.stripePaymentId,
-      status: data.stripePaymentId ? 'pending' : 'confirmed',
+      paymobOrderId: data.paymobOrderId,
+      status: data.paymobOrderId ? 'pending' : 'confirmed',
     },
   })
 

@@ -11,13 +11,13 @@ export function middleware(request: NextRequest) {
 
   const csp = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' https://js.stripe.com https://va.vercel-scripts.com`,
+    `script-src 'self' 'nonce-${nonce}' https://accept.paymob.com https://va.vercel-scripts.com`,
     // 'unsafe-inline' for styles only (Next injects inline <style>); ignored for scripts when a nonce is present.
     `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
     `font-src 'self' https://fonts.gstatic.com data:`,
     `img-src 'self' data: blob: https://images.unsplash.com https://plus.unsplash.com https://lh3.googleusercontent.com https://*.mapbox.com https://*.tiles.mapbox.com`,
-    `connect-src 'self' https://api.stripe.com https://api.mapbox.com https://events.mapbox.com https://*.tiles.mapbox.com https://vitals.vercel-insights.com`,
-    `frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://accounts.google.com`,
+    `connect-src 'self' https://accept.paymob.com https://api.mapbox.com https://events.mapbox.com https://*.tiles.mapbox.com https://vitals.vercel-insights.com`,
+    `frame-src 'self' https://accept.paymob.com https://accounts.google.com`,
     `worker-src 'self' blob:`,
     `object-src 'none'`,
     `base-uri 'self'`,

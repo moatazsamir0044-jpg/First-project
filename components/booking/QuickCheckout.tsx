@@ -35,7 +35,6 @@ export default function QuickCheckout({ listing, checkIn, checkOut, guests, onCo
   const [form, setForm] = useState<CheckoutData>({ name: '', email: '', phone: '', nationality: '', specialRequests: '' })
   const [stayType, setStayType] = useState('')
   const [confirmed, setConfirmed] = useState(false)
-  const [method, setMethod] = useState<'card' | 'bank'>('card')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [countrySearch, setCountrySearch] = useState('')
@@ -64,16 +63,40 @@ export default function QuickCheckout({ listing, checkIn, checkOut, guests, onCo
 
   const handlePay = async () => {
     if (!validate()) {
-      // Move focus to the first issue so the guest sees what is missing.
       const firstError = document.querySelector('[data-error="true"]')
       firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       return
     }
     setLoading(true)
-    // Payment is processed by the backend (Stripe). Simulated here until live keys are wired.
-    await new Promise(r => setTimeout(r, 1500))
-    setLoading(false)
-    onComplete(form)
+    try {
+      const res = await fetch('/api/payments/create-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingId: listing.id,
+          checkIn,
+          checkOut,
+          guests,
+          guestName: form.name,
+          guestEmail: form.email,
+          guestPhone: form.phone,
+          nationality: form.nationality,
+          eligibilityType: stayType,
+          specialRequests: form.specialRequests || undefined,
+        }),
+      })
+      const data = await res.json() as { iframeUrl?: string; error?: string }
+      if (!res.ok || !data.iframeUrl) {
+        setErrors({ submit: data.error ?? 'Payment setup failed. Please try again.' })
+        setLoading(false)
+        return
+      }
+      // Redirect to Paymob hosted payment page
+      window.location.href = data.iframeUrl
+    } catch {
+      setErrors({ submit: 'Network error. Please check your connection and try again.' })
+      setLoading(false)
+    }
   }
 
   const inputCls = (hasError?: string) =>
@@ -177,45 +200,26 @@ export default function QuickCheckout({ listing, checkIn, checkOut, guests, onCo
         {/* Payment */}
         <section className="space-y-4">
           <h2 className="font-heading text-lg text-ink">Payment</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <button type="button" onClick={() => setMethod('card')} className={`p-3 rounded-btn border-2 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${method === 'card' ? 'border-orange bg-orange/5 text-ink' : 'border-gray-200 text-ink/60'}`}>
-              <CreditCard className="w-4 h-4" /> Card
-            </button>
-            <button type="button" onClick={() => setMethod('bank')} className={`p-3 rounded-btn border-2 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${method === 'bank' ? 'border-orange bg-orange/5 text-ink' : 'border-gray-200 text-ink/60'}`}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9,22 9,12 15,12 15,22" /></svg>
-              Bank transfer
-            </button>
+          <div className="p-5 bg-white border border-gray-100 rounded-card flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CreditCard className="w-5 h-5 text-ink/40" />
+              <div>
+                <p className="text-sm font-semibold text-ink">Credit / Debit Card</p>
+                <p className="text-xs text-ink/50">You will be taken to Accept to complete payment securely</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-[#1a1a2e] bg-gray-100 px-2 py-1 rounded">VISA</span>
+              <span className="text-xs font-bold text-red-600 bg-gray-100 px-2 py-1 rounded">MC</span>
+            </div>
           </div>
 
-          {method === 'card' ? (
-            <div className="space-y-3 p-5 bg-white border border-gray-100 rounded-card">
-              <div>
-                <label className="block text-xs font-medium text-ink/50 mb-1.5">CARD NUMBER</label>
-                <input inputMode="numeric" placeholder="1234 5678 9012 3456" className="w-full border border-gray-200 rounded-btn px-4 py-2.5 text-sm outline-none focus:border-orange" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-ink/50 mb-1.5">EXPIRY</label>
-                  <input placeholder="MM / YY" className="w-full border border-gray-200 rounded-btn px-4 py-2.5 text-sm outline-none focus:border-orange" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-ink/50 mb-1.5">CVV</label>
-                  <input inputMode="numeric" placeholder="123" className="w-full border border-gray-200 rounded-btn px-4 py-2.5 text-sm outline-none focus:border-orange" />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="p-5 bg-sky/30 rounded-card space-y-1.5 text-sm">
-              <p className="font-semibold text-ink">Bank transfer details</p>
-              <p className="text-ink/60">Bank: <span className="font-medium text-ink">CIB Egypt</span></p>
-              <p className="text-ink/60">Account: <span className="font-medium text-ink">BirdNest Egypt LLC · 1234567890</span></p>
-              <p className="text-xs text-ink/40 pt-1">After transfer, send proof via WhatsApp to confirm.</p>
-            </div>
+          {errors.submit && (
+            <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-btn px-4 py-3">{errors.submit}</p>
           )}
-
           <div className="flex items-center gap-2 text-xs text-ink/40">
             <Shield className="w-4 h-4 text-green" />
-            Secured by 256-bit SSL encryption. Your payment data is never stored.
+            Payments powered by Accept (Paymob) · 256-bit SSL · Your card data never touches our servers.
           </div>
         </section>
       </div>

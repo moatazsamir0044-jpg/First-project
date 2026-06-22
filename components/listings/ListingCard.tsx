@@ -27,7 +27,7 @@ const ELIGIBILITY_LABELS: Record<string, { label: string; color: string }> = {
 }
 
 export default function ListingCard({ listing, className, checkIn, checkOut, guests, bookNow }: ListingCardProps) {
-  const { isWishlisted, toggle, isCompared, toggleCompare, wishlist } = useWishlist()
+  const { isWishlisted, toggle, isCompared, toggleCompare } = useWishlist()
   const wishlisted = isWishlisted(listing.id)
   const compared = isCompared(listing.id)
   const [imgIdx, setImgIdx] = useState(0)

@@ -8,7 +8,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import StarRating from '@/components/shared/StarRating'
 import { formatPrice } from '@/lib/formatters'
-import { MapPin, Bed, Bath, Users, ShieldCheck, Check, X } from 'lucide-react'
+import { MapPin, Bed, Bath, Users, Check, X } from 'lucide-react'
 
 const ALL_AMENITIES = [
   'WiFi', 'Air Conditioning', 'Pool', 'Gym', 'Parking', 'Kitchen',
@@ -98,13 +98,13 @@ function ComparePage() {
                 <CompareRow
                   label="Price / night"
                   values={listings.map(l => (
-                    <span className="font-bold text-base text-[var(--color-text)]">{formatPrice(l.pricePerNight)}</span>
+                    <span key={l.id} className="font-bold text-base text-[var(--color-text)]">{formatPrice(l.pricePerNight)}</span>
                   ))}
                 />
                 <CompareRow
                   label="Rating"
                   values={listings.map(l => (
-                    <div className="flex flex-col items-center gap-0.5">
+                    <div key={l.id} className="flex flex-col items-center gap-0.5">
                       <StarRating rating={l.rating} size="sm" />
                       <span className="text-xs text-[var(--color-text)]/50">{l.rating} ({l.reviewCount})</span>
                     </div>
@@ -113,7 +113,7 @@ function ComparePage() {
                 <CompareRow
                   label="Bedrooms"
                   values={listings.map(l => (
-                    <span className="flex items-center justify-center gap-1">
+                    <span key={l.id} className="flex items-center justify-center gap-1">
                       <Bed className="w-3.5 h-3.5 text-[var(--color-text)]/40" />
                       {l.bedrooms === 0 ? 'Studio' : `${l.bedrooms} BR`}
                     </span>
@@ -122,7 +122,7 @@ function ComparePage() {
                 <CompareRow
                   label="Bathrooms"
                   values={listings.map(l => (
-                    <span className="flex items-center justify-center gap-1">
+                    <span key={l.id} className="flex items-center justify-center gap-1">
                       <Bath className="w-3.5 h-3.5 text-[var(--color-text)]/40" />
                       {l.bathrooms}
                     </span>
@@ -131,7 +131,7 @@ function ComparePage() {
                 <CompareRow
                   label="Max guests"
                   values={listings.map(l => (
-                    <span className="flex items-center justify-center gap-1">
+                    <span key={l.id} className="flex items-center justify-center gap-1">
                       <Users className="w-3.5 h-3.5 text-[var(--color-text)]/40" />
                       {l.maxGuests}
                     </span>
@@ -163,9 +163,9 @@ function ComparePage() {
                     <CompareRow
                       key={amenity}
                       label={amenity}
-                      values={has.map(h => h
-                        ? <Check className="w-4 h-4 text-[var(--color-accent-secondary)] mx-auto" />
-                        : <X className="w-4 h-4 text-gray-300 mx-auto" />
+                      values={has.map((h, i) => h
+                        ? <Check key={i} className="w-4 h-4 text-[var(--color-accent-secondary)] mx-auto" />
+                        : <X key={i} className="w-4 h-4 text-gray-300 mx-auto" />
                       )}
                     />
                   )

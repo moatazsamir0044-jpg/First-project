@@ -2,7 +2,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Menu, X, Heart } from 'lucide-react'
+import { Menu, X, Heart, User } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import { useLang } from '@/lib/language-context'
 import { useWishlist } from '@/lib/wishlist-context'
 
@@ -11,6 +12,11 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const { isArabic, toggleLang } = useLang()
   const { wishlist } = useWishlist()
+  const { status } = useSession()
+  const accountHref = status === 'authenticated' ? '/account' : '/auth/signin'
+  const accountLabel = status === 'authenticated'
+    ? (isArabic ? 'حسابي' : 'Account')
+    : (isArabic ? 'تسجيل الدخول' : 'Sign in')
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -88,6 +94,13 @@ export default function Header() {
             {isArabic ? 'EN' : 'عربي'}
           </button>
           <Link
+            href={accountHref}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-text)]/70 hover:text-[var(--color-accent-primary)] transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"
+          >
+            <User className="w-4 h-4" />
+            {accountLabel}
+          </Link>
+          <Link
             href="/contact?type=list"
             className="text-sm font-semibold text-[var(--color-accent-secondary)] hover:text-[var(--color-accent-secondary-dk)] transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-secondary)] focus-visible:ring-offset-2"
           >
@@ -142,6 +155,14 @@ export default function Header() {
             >
               {isArabic ? 'EN' : 'عربي'}
             </button>
+            <Link
+              href={accountHref}
+              className="flex items-center gap-2 text-sm font-medium text-[var(--color-text)]/70 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)]"
+              onClick={() => setMobileOpen(false)}
+            >
+              <User className="w-4 h-4" />
+              {accountLabel}
+            </Link>
             <Link
               href="/listings"
               className="bg-[var(--color-accent-primary)] text-white text-sm font-semibold px-4 py-2 rounded-btn hover:bg-[var(--color-accent-primary-dk)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"

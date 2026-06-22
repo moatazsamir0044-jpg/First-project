@@ -193,9 +193,6 @@ export default function FloatingButtons() {
     }
   }
 
-  // Which chatbot panel is open (only one at a time)
-  const activeChatOpen = isBlog ? blogOpen : isListings ? listingsOpen : false
-
   return (
     <>
       {/* Blog chatbot panel */}

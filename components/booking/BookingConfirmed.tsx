@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CheckCircle, MessageCircle, Calendar, Download } from 'lucide-react'
+import { CheckCircle, MessageCircle, Calendar } from 'lucide-react'
 
 interface BookingConfirmedProps {
   reference: string

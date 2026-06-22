@@ -75,6 +75,7 @@ export async function POST(request: Request) {
         const charge = event.data.object as { payment_intent: string; amount_refunded: number }
         const booking = await prisma.booking.findFirst({
           where: { stripePaymentId: charge.payment_intent },
+          include: { listing: { select: { title: true } } },
         })
         if (booking) {
           await prisma.booking.update({

@@ -2,10 +2,17 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
+interface ChatPost {
+  slug: string
+  category: string
+  title: string
+  [key: string]: string
+}
+
 interface Message {
   role: 'user' | 'nesty'
   content: string
-  posts?: any[]
+  posts?: ChatPost[]
 }
 
 export default function BlogChatbot() {
@@ -80,7 +87,7 @@ export default function BlogChatbot() {
                   {msg.content}
                   {msg.posts && msg.posts.length > 0 && (
                     <div className="mt-3 space-y-2">
-                      {msg.posts.map((post: any) => (
+                      {msg.posts.map((post: ChatPost) => (
                         <div key={post.slug} className="bg-white rounded-[12px] p-3 border border-gray-100">
                           <span className="inline-block bg-[#f4603d] text-white text-xs font-semibold px-2 py-0.5 rounded-full mb-1.5">{post.category}</span>
                           <p className="font-semibold text-xs text-[#292a2b] leading-tight mb-1">{post.title}</p>

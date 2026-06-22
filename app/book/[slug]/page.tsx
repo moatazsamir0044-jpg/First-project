@@ -1,19 +1,14 @@
 'use client'
 import { useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { notFound } from 'next/navigation'
+import { useSearchParams, notFound } from 'next/navigation'
+import Link from 'next/link'
 import Header from '@/components/layout/Header'
-import BookingSteps from '@/components/booking/BookingSteps'
-import StepReview from '@/components/booking/StepReview'
-import StepDetails from '@/components/booking/StepDetails'
-import StepEligibility from '@/components/booking/StepEligibility'
-import StepPayment from '@/components/booking/StepPayment'
+import QuickCheckout from '@/components/booking/QuickCheckout'
 import BookingConfirmed from '@/components/booking/BookingConfirmed'
 import { mockListings } from '@/lib/mock-data'
 import { calculateNights, generateBookingRef } from '@/lib/formatters'
-import Link from 'next/link'
 
-interface GuestDetails {
+interface CheckoutData {
   name: string
   email: string
   phone: string
@@ -28,9 +23,8 @@ function BookingFlow({ slug }: { slug: string }) {
   const checkOut = searchParams.get('checkOut') || ''
   const guests = Number(searchParams.get('guests') || '2')
 
-  const [step, setStep] = useState(1)
-  const [guestDetails, setGuestDetails] = useState<GuestDetails | null>(null)
-  const [, setEligibilityType] = useState('')
+  const [done, setDone] = useState(false)
+  const [details, setDetails] = useState<CheckoutData | null>(null)
   const [bookingRef] = useState(generateBookingRef())
 
   if (!listing) return notFound()
@@ -40,32 +34,36 @@ function BookingFlow({ slug }: { slug: string }) {
 
   return (
     <main className="min-h-screen bg-[var(--color-ground)] py-8">
-      <div className="container-site max-w-2xl">
-        {step < 5 && (
+      <div className="container-site max-w-5xl">
+        {!done && (
           <Link
             href={`/listings/${listing.slug}`}
-            className="flex items-center gap-1 text-sm text-[var(--color-text)]/50 hover:text-[var(--color-accent-primary)] mb-6 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-1 text-sm text-[var(--color-text)]/50 hover:text-[var(--color-accent-primary)] mb-6 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2"
           >
             ← Back to property
           </Link>
         )}
-        {step < 5 && <BookingSteps currentStep={step} />}
-        <div className="bg-white rounded-card shadow-sm p-6 md:p-8">
-          {step === 1 && <StepReview listing={listing} checkIn={checkIn} checkOut={checkOut} guests={guests} onNext={() => setStep(2)} />}
-          {step === 2 && <StepDetails onNext={(details) => { setGuestDetails(details); setStep(3) }} onBack={() => setStep(1)} initial={guestDetails || undefined} />}
-          {step === 3 && <StepEligibility eligibility={listing.eligibility} nationality={guestDetails?.nationality || ''} onNext={(type) => { setEligibilityType(type); setStep(4) }} onBack={() => setStep(2)} />}
-          {step === 4 && <StepPayment listing={listing} total={total} onBack={() => setStep(3)} onComplete={() => setStep(5)} />}
-          {step === 5 && (
+
+        {done ? (
+          <div className="max-w-2xl mx-auto bg-white rounded-card shadow-sm p-6 md:p-8">
             <BookingConfirmed
               reference={bookingRef}
-              guestName={guestDetails?.name || 'Guest'}
+              guestName={details?.name || 'Guest'}
               propertyTitle={listing.title}
               checkIn={checkIn || new Date().toISOString().split('T')[0]}
               checkOut={checkOut || new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
               totalPrice={total}
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          <QuickCheckout
+            listing={listing}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            guests={guests}
+            onComplete={(d) => { setDetails(d); setDone(true) }}
+          />
+        )}
       </div>
     </main>
   )
@@ -75,7 +73,7 @@ export default function BookPage({ params }: { params: { slug: string } }) {
   return (
     <>
       <Header />
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading…</div>}>
         <BookingFlow slug={params.slug} />
       </Suspense>
     </>

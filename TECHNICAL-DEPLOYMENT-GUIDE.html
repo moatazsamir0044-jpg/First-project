@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { margin: 1.6cm 1.4cm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9.6pt; color: #292a2b; line-height: 1.55;
+  }
+  .report-header {
+    background: #237c58; color: #fff; padding: 26px 30px;
+    border-radius: 8px; margin-bottom: 24px;
+  }
+  .report-header h1 { font-size: 19pt; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 6px; }
+  .report-header .meta { font-size: 9pt; opacity: 0.9; line-height: 1.7; }
+  h2 {
+    font-size: 12pt; font-weight: 700; color: #f4603d; margin: 24px 0 9px;
+    padding-bottom: 4px; border-bottom: 2px solid #f4603d;
+  }
+  h3 { font-size: 10pt; font-weight: 700; color: #237c58; margin: 16px 0 5px; }
+  p { margin-bottom: 7px; }
+  .intro-box {
+    background: #efe8e1; border-left: 4px solid #237c58;
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 8px; font-size: 9.4pt;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 9px 0 16px; font-size: 8.7pt; }
+  thead tr { background: #292a2b; color: #fff; }
+  thead th { padding: 7px 9px; text-align: left; font-weight: 600; font-size: 8.4pt; }
+  tbody tr:nth-child(even) { background: #f7f4f1; }
+  td { padding: 6px 9px; border-bottom: 1px solid #e0d9d2; vertical-align: top; }
+  code, .mono {
+    font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+    font-size: 8.2pt; background: #efe8e1; padding: 1px 4px; border-radius: 3px; color: #b8401f;
+  }
+  pre {
+    background: #292a2b; color: #efe8e1; padding: 12px 14px; border-radius: 6px;
+    font-family: 'DejaVu Sans Mono', 'Courier New', monospace; font-size: 7.6pt;
+    line-height: 1.45; margin: 8px 0 14px; white-space: pre; overflow-x: hidden;
+  }
+  pre.light { background: #f4f1ee; color: #292a2b; border: 1px solid #e0d9d2; }
+  .tag {
+    display: inline-block; color: #fff; font-size: 7pt; font-weight: 700;
+    padding: 2px 7px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.4px; margin-right: 4px;
+  }
+  .tag-p0 { background: #f4603d; } .tag-p1 { background: #e8a020; } .tag-p2 { background: #7a8aa0; }
+  ul, ol { margin: 4px 0 10px 20px; } li { margin-bottom: 3px; }
+  .note {
+    background: #c9e1ea; border-radius: 6px; padding: 9px 13px; font-size: 8.7pt;
+    margin: 8px 0; border-left: 4px solid #237c58;
+  }
+  .warn {
+    background: #fdeee9; border-radius: 6px; padding: 9px 13px; font-size: 8.7pt;
+    margin: 8px 0; border-left: 4px solid #f4603d;
+  }
+  td:first-child.idx { font-weight: 700; color: #f4603d; white-space: nowrap; }
+  .summary-box {
+    background: #292a2b; color: #fff; padding: 18px 22px; border-radius: 8px;
+    margin-top: 22px; font-size: 9.2pt; line-height: 1.6;
+  }
+  .summary-box strong { color: #f4603d; }
+  .summary-box .headline { font-size: 12pt; font-weight: 700; margin-bottom: 8px; }
+  .avoid-break { page-break-inside: avoid; }
+  strong.orange { color: #f4603d; } strong.green { color: #237c58; }
+</style>
+</head>
+<body>
+
+<div class="report-header">
+  <h1>BirdNest — Technical &amp; Deployment Guide</h1>
+  <div class="meta">
+    For: Technology / Development Department · Date: 22 June 2026<br>
+    Repo: moatazsamir0044-jpg/first-project (default branch <span class="mono">main</span>)<br>
+    Purpose: How the codebase is built, what it runs on, and exactly what to do to go live for bookings &amp; payments.
+  </div>
+</div>
+
+<h2>1 · System Overview</h2>
+<div class="intro-box">
+BirdNest is a <strong>server-rendered Next.js 14 (App Router)</strong> application for holiday rentals. Front-end pages and the backend API live in one Next.js project, deployed together to <strong>Vercel</strong>. Data is in <strong>PostgreSQL on Supabase</strong>, accessed via <strong>Prisma</strong>. Payments via <strong>Stripe</strong>, email via <strong>Resend</strong>, an optional chatbot via <strong>Anthropic</strong>.
+</div>
+<pre>            ┌──────────────────────────────────────────┐
+            │   VERCEL — Next.js 14 (Node 20 runtime)    │
+   Client ──┼─▶ React pages (app/*) ─▶ API routes (app/api/*)
+            │        middleware.ts = CSP + security headers
+            └──────────┬───────────────────┬─────────────┘
+                       │                    │ Prisma
+            Stripe · Resend · Anthropic   Supabase Postgres (eu-central-1)</pre>
+
+<h2>2 · Tech Stack (what it is built on)</h2>
+<table>
+  <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Framework</td><td>Next.js (App Router)</td><td>14.2.35</td><td>Pages + API in one project</td></tr>
+    <tr><td>Language</td><td>TypeScript (strict)</td><td>^6</td><td>Build fails on type errors (intentional)</td></tr>
+    <tr><td>UI / Styling</td><td>React / Tailwind CSS</td><td>^18 / ^3.4</td><td>Brand tokens in <span class="mono">tailwind.config.ts</span></td></tr>
+    <tr><td>ORM</td><td>Prisma</td><td>^5.22</td><td>Schema in <span class="mono">prisma/schema.prisma</span></td></tr>
+    <tr><td>Database</td><td>PostgreSQL (Supabase)</td><td>PG 17</td><td><span class="mono">birdnest-production</span>, eu-central-1</td></tr>
+    <tr><td>Auth</td><td>NextAuth / Auth.js</td><td>5.0.0-beta.31</td><td>Credentials + Google · JWT sessions</td></tr>
+    <tr><td>Payments</td><td>Stripe</td><td>srv ^22 / js ^9</td><td>API version <span class="mono">2026-05-27.dahlia</span></td></tr>
+    <tr><td>Email</td><td>Resend</td><td>^6.12</td><td><span class="mono">lib/email.ts</span></td></tr>
+    <tr><td>i18n</td><td>next-intl</td><td>^4.13</td><td>EN / AR · <span class="mono">messages/</span></td></tr>
+    <tr><td>AI chatbot</td><td>@anthropic-ai/sdk</td><td>^0.104</td><td><span class="mono">app/api/chat/*</span></td></tr>
+    <tr><td>Maps / Validation</td><td>Mapbox GL / Zod</td><td>^3 / ^4</td><td>All API inputs Zod-validated</td></tr>
+    <tr><td>Hosting</td><td>Vercel</td><td>—</td><td>Project <span class="mono">first-project</span>, region <span class="mono">iad1</span></td></tr>
+  </tbody>
+</table>
+<div class="warn"><strong>⚠ Lockfile split:</strong> <span class="mono">vercel.json</span> uses <strong>pnpm</strong> but the repo ships both <span class="mono">pnpm-lock.yaml</span> and <span class="mono">package-lock.json</span>. Pick one package manager and delete the other lockfile to keep installs deterministic.</div>
+
+<h2>3 · Repository Layout</h2>
+<pre class="light">app/          App Router — api/ (backend), page routes, ar/ (Arabic),
+              layout.tsx, sitemap.ts, robots.ts
+components/    React components by feature (auth, booking, home,
+              listing-detail, listings, layout, shared, blog)
+lib/          auth.ts · prisma.ts · stripe.ts · password.ts (scrypt)
+              rate-limit.ts · email.ts · policies.ts · formatters.ts
+              countries.ts · mock-data.ts  ◀ demo data pages still render
+prisma/       schema.prisma · migrations/ (3) · seed.ts (12 listings)
+middleware.ts CSP nonce + security headers
+content/ messages/   MDX/blog · i18n strings</pre>
+
+<h2>4 · Data Model (8 Prisma models)</h2>
+<p>All 8 tables created in Postgres (eu-central-1), RLS-enabled, <strong>12 listings + 36 reviews seeded</strong>. Prices stored as <strong>integers (EGP)</strong>; Stripe charges in piastres (<span class="mono">total × 100</span>, currency <span class="mono">egp</span>).</p>
+<table>
+  <thead><tr><th>Model</th><th>Key fields / purpose</th></tr></thead>
+  <tbody>
+    <tr><td><strong>User</strong></td><td>email, <span class="mono">passwordHash</span>, role (default "user"); relations to accounts/sessions/bookings</td></tr>
+    <tr><td><strong>Account / Session / VerificationToken</strong></td><td>Standard NextAuth adapter tables</td></tr>
+    <tr><td><strong>Listing</strong></td><td>slug, title(Ar), pricePerNight, utilitiesEst, cleaningFee, beds/baths/maxGuests, amenities[], images[], rating, eligibility, lat/lng. Indexed: area, isActive, price, rating</td></tr>
+    <tr><td><strong>Booking</strong></td><td>reference(unique), listingId, userId?, guest{Name,Email,Phone}, <span class="mono">nationality</span>, dates, totalPrice, status (pending/confirmed/cancelled), <span class="mono">stripePaymentId</span>, eligibilityType</td></tr>
+    <tr><td><strong>Review</strong></td><td>listingId, author, rating, comment, source</td></tr>
+    <tr><td><strong>ContactSubmission</strong></td><td>name, email, enquiryType, message</td></tr>
+  </tbody>
+</table>
+
+<h2>5 · API Surface (app/api/*)</h2>
+<p>All handlers Zod-validate input, are rate-limited, and use Prisma. <strong class="green">These exist and work against the live DB</strong> — the gap is the front-end not calling all of them yet (§9).</p>
+<table>
+  <thead><tr><th>Route</th><th>Method</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">/api/listings</td><td>GET</td><td>List/filter active listings</td></tr>
+    <tr><td class="mono">/api/listings/[slug]</td><td>GET</td><td>Single listing</td></tr>
+    <tr><td class="mono">/api/listings/[slug]/reviews · /availability · /view</td><td>GET/POST</td><td>Reviews · date availability · view counter</td></tr>
+    <tr><td class="mono">/api/search · /api/amenities</td><td>GET</td><td>Search with filters · amenity list</td></tr>
+    <tr><td class="mono">/api/bookings</td><td>POST/GET</td><td>Create booking · look up by email/reference</td></tr>
+    <tr><td class="mono">/api/payments/create-intent</td><td>POST</td><td>Create Stripe PaymentIntent → clientSecret + breakdown</td></tr>
+    <tr><td class="mono">/api/webhooks/stripe</td><td>POST</td><td>payment_intent.succeeded/failed, charge.refunded → status + email</td></tr>
+    <tr><td class="mono">/api/auth/register · /[...nextauth]</td><td>POST/*</td><td>Register (policy + rate limit) · NextAuth</td></tr>
+    <tr><td class="mono">/api/contact · /api/reviews · /api/chat/*</td><td>POST</td><td>Contact form · review submit · Anthropic chatbot</td></tr>
+    <tr><td class="mono">/api/admin/*</td><td>*</td><td>Dashboard, bookings, listings CRUD (guarded by ADMIN_SECRET_KEY)</td></tr>
+  </tbody>
+</table>
+
+<h2>6 · Authentication (lib/auth.ts)</h2>
+<ul>
+  <li>NextAuth v5. <strong>Credentials (email/password) + Google OAuth.</strong> Session strategy = <strong>JWT</strong>; <span class="mono">role</span> added to session.</li>
+  <li><span class="mono">trustHost: true</span>; secret = <span class="mono">NEXTAUTH_SECRET ?? AUTH_SECRET</span>.</li>
+  <li>Passwords hashed with Node's built-in <strong>scrypt</strong> (no native deps — serverless-friendly), constant-time verify.</li>
+  <li>Register endpoint: 8+ chars upper/lower/number, rate-limited, enumeration-safe errors.</li>
+</ul>
+
+<h2>7 · Payments — Current vs Target</h2>
+<div class="warn"><strong>Backend payment path is fully built. The checkout UI is NOT wired to it — it simulates payment.</strong></div>
+<p>Current in <span class="mono">components/booking/QuickCheckout.tsx</span> — card fields are plain inputs, not Stripe Elements:</p>
+<pre>// Simulated until live keys are wired.
+await new Promise(r =&gt; setTimeout(r, 1500))   // ◀ FAKE: no charge, no booking
+onComplete(form)</pre>
+<p><strong class="green">Target flow to implement:</strong></p>
+<ol>
+  <li><span class="mono">POST /api/payments/create-intent</span> → receive <span class="mono">clientSecret</span>.</li>
+  <li>Mount <strong>Stripe Elements</strong> (<span class="mono">@stripe/react-stripe-js</span>) with the clientSecret; replace plain card inputs with <span class="mono">&lt;PaymentElement&gt;</span>.</li>
+  <li><span class="mono">stripe.confirmPayment(...)</span>.</li>
+  <li><span class="mono">POST /api/bookings</span> with <span class="mono">stripePaymentId</span> (status starts <span class="mono">pending</span>).</li>
+  <li>Stripe fires <span class="mono">payment_intent.succeeded</span> → webhook flips booking to <span class="mono">confirmed</span> + sends email.</li>
+</ol>
+<p>Steps 1, 4, 5 already exist server-side. The remaining work is steps 2–3 plus two fetch calls.</p>
+
+<h2>8 · Security (already in place)</h2>
+<ul>
+  <li><span class="mono">middleware.ts</span>: per-request <strong>nonce CSP</strong> + HSTS (2y, preload), <span class="mono">X-Frame-Options: DENY</span>, <span class="mono">nosniff</span>, Referrer-Policy, locked Permissions-Policy. CSP allowlists Stripe/Mapbox/Google/Unsplash/Vercel.</li>
+  <li><span class="mono">poweredByHeader: false</span>; all inputs Zod-validated; rate limits on register/booking/payment.</li>
+  <li>Stripe webhook verifies signature against <span class="mono">STRIPE_WEBHOOK_SECRET</span>.</li>
+  <li>Supabase RLS enabled on all tables; Prisma connects as owner (bypasses RLS by design — anon API locked).</li>
+</ul>
+
+<h2>9 · Gaps Blocking Go-Live (with exact files)</h2>
+
+<h3><span class="tag tag-p0">P0</span> Front-end renders mock data, not the DB</h3>
+<p>These import the mock <em>arrays</em> instead of the API/Prisma — convert to server components querying Prisma, or fetch the existing routes (importing the <span class="mono">Listing</span> <em>type</em> is fine):</p>
+<pre class="light">app/listings/page.tsx          app/book/[slug]/page.tsx
+app/listings/[slug]/page.tsx   app/booking/page.tsx
+  (generateStaticParams = mock) app/compare/page.tsx
+app/wishlist/page.tsx          app/sitemap.ts
+components/home/FeaturedListings.tsx · components/shared/CompareBar.tsx</pre>
+
+<h3><span class="tag tag-p0">P0</span> Checkout simulates payment</h3>
+<p><span class="mono">QuickCheckout.tsx</span> — implement the §7 target flow (Stripe Elements + two fetches).</p>
+
+<h3><span class="tag tag-p0">P0</span> Vercel env vars not set</h3>
+<p>See §10 — nothing runtime works without these.</p>
+
+<h3><span class="tag tag-p1">P1</span> Prisma migration drift</h3>
+<ul>
+  <li><span class="mono">Booking.nationality</span> is in the schema + live DB but <strong>no migration creates it</strong> — add a migration so a fresh <span class="mono">migrate deploy</span> is correct.</li>
+  <li>Live DB was built from the schema directly; its <span class="mono">_prisma_migrations</span> doesn't list the 3 repo migrations. <strong>Baseline it:</strong> <span class="mono">prisma migrate resolve --applied &lt;name&gt;</span> for each.</li>
+</ul>
+
+<h3><span class="tag tag-p1">P1</span> In-memory rate limiter</h3>
+<p><span class="mono">lib/rate-limit.ts</span> uses a process-local Map — ineffective across serverless instances. Move to <strong>Upstash/Redis</strong>.</p>
+
+<h3><span class="tag tag-p2">P2</span> Pre-launch &amp; housekeeping</h3>
+<ul>
+  <li>Independent security review / pen-test; connect domain + DNS; verify Resend deliverability; native review of Arabic strings.</li>
+  <li>Duplicate lockfiles — keep one. <span class="mono">vercel.json</span> region <span class="mono">iad1</span> (US) vs DB in EU — consider moving Vercel to an EU region (e.g. <span class="mono">fra1</span>) for latency.</li>
+</ul>
+
+<h2>10 · Environment Variables (set in Vercel → Production, then Redeploy)</h2>
+<div class="note">The Vercel MCP integration is read-only for config — set these in the <strong>Vercel dashboard</strong> or via <span class="mono">vercel env</span>. Never commit them.</div>
+<p><strong class="green">Required to function</strong></p>
+<table>
+  <thead><tr><th>Var</th><th>Source / notes</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">DATABASE_URL</td><td>Supabase → Connect → <strong>Transaction pooler</strong> (port 6543); replace [YOUR-PASSWORD]. Pooler for runtime, direct (5432) only for migrations.</td></tr>
+    <tr><td class="mono">NEXTAUTH_SECRET</td><td><span class="mono">openssl rand -base64 32</span> — fresh, don't commit</td></tr>
+    <tr><td class="mono">NEXTAUTH_URL</td><td>Production domain (e.g. https://birdnestlife.com)</td></tr>
+    <tr><td class="mono">NEXT_PUBLIC_SITE_URL</td><td>Same production domain</td></tr>
+  </tbody>
+</table>
+<p><strong class="green">Required for payments</strong></p>
+<table>
+  <thead><tr><th>Var</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">STRIPE_SECRET_KEY</td><td>Stripe live key</td></tr>
+    <tr><td class="mono">STRIPE_PUBLISHABLE_KEY</td><td>Used client-side by Stripe Elements</td></tr>
+    <tr><td class="mono">STRIPE_WEBHOOK_SECRET</td><td>After adding endpoint <span class="mono">…/api/webhooks/stripe</span> in Stripe</td></tr>
+  </tbody>
+</table>
+<p><strong>Optional:</strong> <span class="mono">GOOGLE_CLIENT_ID/SECRET</span> (login) · <span class="mono">RESEND_API_KEY</span> (email) · <span class="mono">ANTHROPIC_API_KEY</span> (chatbot) · <span class="mono">NEXT_PUBLIC_MAPBOX_TOKEN</span> · <span class="mono">NEXT_PUBLIC_WHATSAPP_NUMBER</span> · <span class="mono">ADMIN_SECRET_KEY</span>, <span class="mono">ADMIN_EMAIL</span>.</p>
+<div class="warn"><span class="mono">next.config.mjs</span> <span class="mono">serverActions.allowedOrigins</span> lists <span class="mono">birdnestlife.com</span> — confirm that's the real production domain.</div>
+
+<h2>11 · Deployment Runbook (to first live booking)</h2>
+<ol>
+  <li>Wire pages to the DB (P0 #1) — verify seeded listings render on <span class="mono">/listings</span>.</li>
+  <li>Wire Stripe into checkout (P0 #2).</li>
+  <li>Add <span class="mono">nationality</span> migration; <span class="mono">migrate resolve --applied</span> the 3 existing migrations against the live DB.</li>
+  <li>Set env vars in Vercel (§10) for Production.</li>
+  <li>Add the Stripe webhook endpoint → copy <span class="mono">STRIPE_WEBHOOK_SECRET</span> into Vercel.</li>
+  <li>Redeploy on Vercel.</li>
+  <li><strong>E2E test on the prod URL:</strong> browse → listings appear; book with a Stripe <strong>test</strong> card → intent created → booking row written → webhook confirms → email received → shows in <span class="mono">/account</span>.</li>
+  <li>Switch Stripe to <strong>live</strong> keys, connect domain + DNS, re-test once.</li>
+  <li>Schedule the security review before announcing.</li>
+</ol>
+<pre class="light">npm install &amp;&amp; npm run build   # prisma generate + next build (type+lint errors FAIL build)
+npx tsc --noEmit  ·  npx next lint   # both should be clean</pre>
+
+<h2>12 · What the Dev Team Should Start Doing Now</h2>
+<p><strong class="orange">This week (unblocks go-live):</strong></p>
+<ol>
+  <li>Assign one owner to <strong>DB-wiring</strong> (P0 #1) and one to <strong>Stripe checkout</strong> (P0 #2) — independent, run in parallel.</li>
+  <li>Vercel owner: set <strong>env vars</strong> (§10) + add the <strong>Stripe webhook</strong> (≈1 hour; blocks all runtime testing).</li>
+  <li>Add the <strong>nationality migration</strong> and <strong>baseline the live DB</strong>.</li>
+</ol>
+<p><strong class="orange">Immediately, as standing practice:</strong></p>
+<ol start="4">
+  <li>Resolve the <strong>lockfile / package-manager</strong> split.</li>
+  <li>Stand up a <strong>Vercel Preview/staging</strong> env with its own Supabase project/branch — never test against prod data.</li>
+  <li>Move the <strong>rate limiter to Upstash</strong>.</li>
+  <li>Add <strong>tests around the booking + payment path</strong> and wire CI on PRs.</li>
+  <li>Keep the <strong>branch → PR → squash-merge</strong> workflow off <span class="mono">main</span>.</li>
+</ol>
+<p><strong class="orange">Before public launch:</strong></p>
+<ol start="9">
+  <li>Independent <strong>security review / pen-test</strong>.</li>
+  <li>Verify <strong>Resend</strong> deliverability (SPF/DKIM on sending domain).</li>
+  <li>Native-speaker review of <strong>Arabic</strong> content.</li>
+  <li>Build a minimal <strong>admin UI</strong> on the existing <span class="mono">/api/admin/*</span> routes for non-developers.</li>
+</ol>
+
+<div class="summary-box">
+  <div class="headline">Bottom line</div>
+  The engine is built: data model, full API, auth, security, and a seeded production database all exist and work. What's left is <strong>wiring the front-end to the database</strong>, <strong>connecting the checkout to the existing Stripe backend</strong>, and <strong>setting the Vercel environment variables</strong> — plus a migration baseline. These are well-scoped integration tasks, not new systems. With focused effort the site can take its first real, paid booking within roughly <strong>one week</strong>.
+</div>
+
+<h2>13 · Key Identifiers</h2>
+<table>
+  <thead><tr><th>Thing</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>GitHub repo</td><td class="mono">moatazsamir0044-jpg/first-project (default main)</td></tr>
+    <tr><td>Vercel project</td><td class="mono">first-project</td> </tr>
+    <tr><td>Supabase project</td><td class="mono">birdnest-production · ref ngeqlmbqgauhhhmouqiq · eu-central-1 · PG 17</td></tr>
+    <tr><td>Supabase API URL</td><td class="mono">https://ngeqlmbqgauhhhmouqiq.supabase.co</td></tr>
+    <tr><td>⚠ Do NOT touch</td><td class="mono">Supabase trnvibgjjcahegjjxoaz — different app (task tracker)</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

@@ -66,16 +66,10 @@ export default function Hero() {
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-accent-primary-dk)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-accent-primary)')}
             >
-              {isArabic ? 'ابحث عن عقار' : 'Find a stay'}
+              {isArabic ? 'ابدأ الحجز' : 'Start booking'}
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                 <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
-            </Link>
-            <Link
-              href="/booking"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-btn font-semibold border-2 border-white/60 text-white backdrop-blur-sm transition-all hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
-            >
-              {isArabic ? 'ابدأ الحجز' : 'Start booking'}
             </Link>
           </div>
 

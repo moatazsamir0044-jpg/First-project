@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { LanguageProvider } from '@/lib/language-context'
 import { WishlistProvider } from '@/lib/wishlist-context'
+import AuthSessionProvider from '@/lib/session-provider'
 import FloatingButtons from '@/components/shared/FloatingButtons'
 import CompareBar from '@/components/shared/CompareBar'
 
@@ -56,13 +57,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="alternate" hrefLang="x-default" href={siteUrl} />
       </head>
       <body>
-        <LanguageProvider>
-          <WishlistProvider>
-            {children}
-            <FloatingButtons />
-            <CompareBar />
-          </WishlistProvider>
-        </LanguageProvider>
+        <AuthSessionProvider>
+          <LanguageProvider>
+            <WishlistProvider>
+              {children}
+              <FloatingButtons />
+              <CompareBar />
+            </WishlistProvider>
+          </LanguageProvider>
+        </AuthSessionProvider>
         <Analytics />
         <SpeedInsights />
       </body>

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { SlidersHorizontal, X } from 'lucide-react'
 
-const LOCATIONS = ['New Cairo', 'North Coast', 'El Gouna', 'Sheikh Zayed']
 const AMENITIES = ['Pool', 'Gym', 'Beach Access', 'Parking', 'WiFi', 'AC', 'Kitchen', 'Washer', 'Workspace', 'Pet Friendly', 'BBQ', 'Garden']
 const REFUND_POLICIES = [
   { value: 'flexible', label: 'Flexible (Free cancellation)' },

@@ -9,7 +9,7 @@ interface Props {
   onBack: () => void
 }
 
-export default function StepEligibility({ eligibility, nationality, onNext, onBack }: Props) {
+export default function StepEligibility({ nationality, onNext, onBack }: Props) {
   const [stayType, setStayType] = useState('')
   const [confirmed, setConfirmed] = useState(false)
   const arabNational = isArabNational(nationality)

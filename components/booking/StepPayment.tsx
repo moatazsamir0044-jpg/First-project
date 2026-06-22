@@ -11,7 +11,7 @@ interface StepPaymentProps {
   onComplete: () => void
 }
 
-export default function StepPayment({ listing, total, onBack, onComplete }: StepPaymentProps) {
+export default function StepPayment({ total, onBack, onComplete }: StepPaymentProps) {
   const [method, setMethod] = useState<'card' | 'bank'>('card')
   const [loading, setLoading] = useState(false)
 

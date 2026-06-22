@@ -13,8 +13,9 @@ export default function CookieConsent() {
     localStorage.setItem('birdnest-cookie-consent', 'accepted')
     setVisible(false)
     // Enable analytics
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted' })
+    const w = window as Window & { gtag?: (...args: unknown[]) => void }
+    if (typeof window !== 'undefined' && w.gtag) {
+      w.gtag('consent', 'update', { analytics_storage: 'granted', ad_storage: 'granted' })
     }
   }
 

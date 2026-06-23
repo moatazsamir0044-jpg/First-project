@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verdnest — Complete Feature List &amp; Business Value</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:    #f4603d;
+      --orange-dk: #dd4f2e;
+      --green:     #237c58;
+      --cream:     #efe8e1;
+      --ink:       #292a2b;
+      --sky:       #c9e1ea;
+      --muted:     #6b6e70;
+      --border:    #e2dbd4;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #f7f4f1;
+      color: var(--ink);
+      line-height: 1.6;
+      padding: 40px 20px 80px;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 40px rgba(41,42,43,0.10);
+    }
+
+    /* ── Header ── */
+    .page-header {
+      background: var(--ink);
+      padding: 40px 52px 36px;
+    }
+    .page-header .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+    .page-header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .header-meta {
+      display: flex;
+      gap: 28px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.5);
+    }
+    .header-meta span strong { color: rgba(255,255,255,0.85); }
+    .header-note {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.07);
+      border-left: 3px solid var(--orange);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--cream);
+      padding: 28px 52px;
+      border-bottom: 1px solid var(--border);
+    }
+    .toc-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px 24px;
+    }
+    .toc-grid a {
+      font-size: 13px;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toc-grid a:hover { color: var(--orange); }
+    .toc-grid a .num {
+      background: var(--orange);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Body ── */
+    .page-body { padding: 52px; }
+
+    /* Section header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-num {
+      background: var(--ink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    section.feature-section { margin-bottom: 52px; }
+
+    /* Feature card */
+    .feature-card {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .feature-card-head {
+      background: #faf8f6;
+      padding: 14px 20px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .feature-num {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--orange);
+      min-width: 32px;
+    }
+    .feature-card-head h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .feature-card-body {
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .fc-what, .fc-value {
+      padding: 16px 20px;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .fc-what {
+      border-right: 1px solid var(--border);
+    }
+    .fc-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .fc-what .fc-label { color: var(--muted); }
+    .fc-value .fc-label { color: var(--green); }
+    .fc-what p { color: var(--muted); }
+    .fc-value p { color: var(--ink); }
+    .fc-value p strong { color: var(--orange); }
+
+    /* "Before" callout */
+    .before-box {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--border);
+      background: rgba(244,96,61,0.04);
+      padding: 12px 20px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .before-box strong { color: var(--orange); }
+
+    /* Special: list inside a card */
+    .fc-what ul {
+      list-style: none;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .fc-what ul li::before {
+      content: '· ';
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    /* Footer */
+    .page-footer {
+      background: var(--cream);
+      padding: 18px 52px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 680px) {
+      .page-body { padding: 28px 22px; }
+      .page-header { padding: 28px 22px; }
+      .toc { padding: 20px 22px; }
+      .toc-grid { grid-template-columns: 1fr 1fr; }
+      .feature-card-body { grid-template-columns: 1fr; }
+      .fc-what { border-right: none; border-bottom: 1px solid var(--border); }
+      .page-footer { flex-direction: column; gap: 6px; text-align: center; }
+      .header-meta { flex-direction: column; gap: 6px; }
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page { box-shadow: none; border-radius: 0; }
+      .feature-card { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="eyebrow">Verdnest Digital Platform</div>
+    <h1>Complete Feature List &amp; Business Value</h1>
+    <div class="header-meta">
+      <span><strong>Prepared for</strong> Commercial Director · Tech Director · Ecommerce Manager</span>
+      <span><strong>Date</strong> June 2026</span>
+    </div>
+    <div class="header-note">This document covers all 37 features built in the prototype, each with an explicit business impact. Features are grouped by area of the site.</div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <div class="toc-grid">
+      <a href="#s1"><span class="num">1</span> Homepage &amp; Discovery</a>
+      <a href="#s2"><span class="num">2</span> Listings Search &amp; Filtering</a>
+      <a href="#s3"><span class="num">3</span> Listing Detail Page</a>
+      <a href="#s4"><span class="num">4</span> Wishlist &amp; Compare</a>
+      <a href="#s5"><span class="num">5</span> Booking &amp; Checkout</a>
+      <a href="#s6"><span class="num">6</span> User Accounts</a>
+      <a href="#s7"><span class="num">7</span> Bilingual (AR / EN)</a>
+      <a href="#s8"><span class="num">8</span> Security</a>
+      <a href="#s9"><span class="num">9</span> SEO &amp; Performance</a>
+      <a href="#s10"><span class="num">10</span> Blog &amp; Content</a>
+      <a href="#s11"><span class="num">11</span> Backend &amp; Admin</a>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- 1. Homepage -->
+    <section class="feature-section" id="s1">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>Homepage &amp; Discovery</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.1</span><h3>Full-screen Hero with Live Stats Bar</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Cinematic full-screen landing section with property photo, brand headline, and a stats strip: 500+ verified properties · 10,000+ happy guests · 4.8★ average rating · 24/7 Arabic &amp; English support.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>First impressions determine bounce rate. Social proof numbers build trust with a new visitor before they scroll — reducing drop-off at the very top of the funnel.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.2</span><h3>Integrated Search Widget (in the Hero)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Destination / check-in / check-out / guests search bar embedded directly in the hero. One click sends the guest to a filtered listings page. Pre-fills sensible default dates.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Every extra click before searching costs conversions. Putting search at the very first touchpoint removes friction and gets guests into the booking funnel immediately.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.3</span><h3>Featured Listings Strip</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Curated row of top-performing properties on the homepage — photo, name, location, price, and rating.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Guests who arrive without a specific destination need inspiration. Featured listings convert passive browsers into active searchers.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.4</span><h3>Destination Cards</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Visual cards for the four main markets — New Cairo, North Coast / Sahel, El Gouna, Sheikh Zayed — each linking to a pre-filtered listings page.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Geographic segmentation lets guests self-identify quickly. Verdnest can promote seasonal inventory directly from the homepage without developer work.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.5</span><h3>"How It Works" Section &amp; Dedicated Page</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Three-step illustrated walkthrough (Search → Book → Stay) on the homepage, plus a full /how-it-works page with a 6-question FAQ section.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Unfamiliar guests drop off when they don't understand the process. An explicit trust-building section reduces support enquiries and booking anxiety.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.6</span><h3>"Why Verdnest" Trust Section</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Four illustrated pillars — Verified Properties, Transparent Pricing, Flexible Bookings, Local Expert Support — presented visually on the homepage.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Direct answer to "why not Airbnb?" Verdnest's Egypt-specific advantages become tangible and visible rather than buried in an About page.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.7</span><h3>Testimonials Section</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Curated guest reviews with names, star ratings, and photos displayed prominently on the homepage.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Social proof at the homepage level. Guests who see peer validation before searching are more likely to complete a booking.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.8</span><h3>Newsletter Signup</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Email capture section at the bottom of the homepage.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Builds a direct marketing channel. Summer properties can be promoted to warm leads before the season. Email cost-per-booking is a fraction of paid acquisition.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">1.9</span><h3>Cookie Consent Banner (GDPR-compliant)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Consent banner on first visit — records the user's choice and does not fire analytics until consent is given.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Legal compliance for EU/UK guests. Required to run Google Analytics, Facebook Pixel, or retargeting campaigns lawfully.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Listings -->
+    <section class="feature-section" id="s2">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>Listings Search &amp; Filtering</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">2.1</span><h3>Advanced Filter Sidebar</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what">
+            <div class="fc-label">What it does</div>
+            <ul>
+              <li>Bedrooms: Studio, 1, 2, 3, 4+</li>
+              <li>Price range: min/max per night (EGP)</li>
+              <li>12 amenity checkboxes: Pool, Gym, Beach, WiFi, AC, Kitchen, Washer, Workspace, Pet Friendly, BBQ, Garden, Parking</li>
+              <li>Cancellation policy: Flexible, Moderate, Non-refundable</li>
+            </ul>
+          </div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Filtering reduces time-to-decision and stops guests from abandoning when they see irrelevant listings. Amenity filters are a top-3 UX request on any rental platform.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">2.2</span><h3>Sort Bar</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Sort listings by price (low–high, high–low), rating, or newest arrival.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Budget travellers sort by price; quality-seekers sort by rating. The same inventory appeals to both without duplication.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">2.3</span><h3>Shareable / Bookmarkable Filter URLs</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Every filter updates the URL (<code style="font-size:12px;background:#f3f0ec;padding:1px 5px;border-radius:4px">/listings?area=El+Gouna&amp;bedrooms=2&amp;amenities=Pool</code>). The URL can be shared via WhatsApp or bookmarked.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Sales staff can send pre-filtered shortlists via WhatsApp. Marketing campaigns can link directly to seasonal inventory. Zero developer work needed.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">2.4</span><h3>Urgency Badges</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Listing cards show "Only 2 left this weekend!" or "High season — filling fast" badges when inventory is limited.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Creates legitimate purchase urgency. Proven to lift booking conversion rates by <strong>10–20%</strong> on property rental platforms.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">2.5</span><h3>Refund Policy Badges</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Each listing card shows a colour-coded badge: "Free cancellation," "Partial refund," or "Non-refundable."</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>One of the top three questions guests ask before booking. Showing it on the card prevents wasted clicks and reduces abandoned checkout caused by policy surprises.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">2.6</span><h3>AI Listings Chatbot — "Nesty"</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Floating chat widget. Guest types plain language ("I need a 2-bedroom with a pool near the beach for 4 adults in August") and Nesty responds with matching listings and direct booking links.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Converts guests overwhelmed by filters into assisted buyers. Functions as a 24/7 virtual sales agent — particularly valuable for Arabic-speaking guests unfamiliar with filter UIs.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Listing Detail -->
+    <section class="feature-section" id="s3">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <h2>Listing Detail Page</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">3.1</span><h3>Photo Gallery with Lightbox</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>4-column desktop photo grid and swipeable mobile view. Any photo opens a full-screen lightbox with keyboard/swipe navigation across all photos.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Photos are the #1 factor in booking decisions. A professional gallery that works on mobile — where most Egyptian guests browse — directly impacts conversion.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">3.2</span><h3>Full Amenities Grid</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Visual icon grid showing all property amenities in a scannable, at-a-glance format.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Reduces phone enquiries about basic features. Every avoided support call is time saved and a faster path to booking.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">3.3</span><h3>Reviews Section</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Guest reviews with star ratings, reviewer name, and date. Aggregated score shown prominently.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Properties with visible reviews book at <strong>2–3×</strong> the rate of those without. The review system creates a trust loop: more bookings → more reviews → more bookings.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">3.4</span><h3>Booking Widget (Sticky Desktop + Mobile Bar)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Desktop: sticky sidebar with dates, guests, and full price breakdown at all times. Mobile: fixed bottom bar with price and "Reserve" button — always visible regardless of scroll position.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>The mobile sticky bar is the single highest-impact conversion element on mobile property pages. It eliminates the need to scroll back up to start a booking.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">3.5</span><h3>Eligibility Notice (Arab National Policy)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>When a guest selects their nationality, the page automatically shows whether a marriage certificate or family ID is required at check-in — before they reach payment.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Communicating eligibility early prevents bookings that cannot be fulfilled at check-in — avoiding refunds, complaints, and reputational damage.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">3.6</span><h3>SEO Rich Snippets (Schema Markup)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Each listing page emits structured JSON-LD data that Google reads to show star ratings, price, and availability directly in search results.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Rich snippets earn <strong>20–30% higher click-through rates</strong> from Google. Free organic traffic — requires no ad spend.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Wishlist & Compare -->
+    <section class="feature-section" id="s4">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <h2>Wishlist &amp; Compare</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">4.1</span><h3>Wishlist — Save for Later</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Guests heart-save any listing. Saved listings appear in a dedicated /wishlist page. State persists between sessions.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p><strong>60–70%</strong> of property bookings are not made on the first visit. Wishlists bring guests back. They also create a high-intent user signal useful for email retargeting.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">4.2</span><h3>Side-by-Side Property Comparison</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Select up to 3 properties from the wishlist and open a full comparison table — pricing, bedrooms, bathrooms, amenities matrix, refund policy, and rating in a single view.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Guests comparing multiple properties are the highest-intent segment. Keeping them on-site during comparison prevents them from going to a competitor to decide.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Booking & Checkout -->
+    <section class="feature-section" id="s5">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <h2>Booking &amp; Checkout</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">5.1</span><h3>3-Click QuickCheckout</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>The entire booking — guest details, eligibility, payment — on one page. Three actions complete a booking: (1) fill details + select guest type, (2) tick eligibility, (3) confirm and pay.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Reducing from 4 screens to 1 is the <strong>single highest-ROI change</strong> on the site. Industry data shows checkout simplification lifts booking completion rates by <strong>25–40%</strong>.</p></div>
+        </div>
+        <div class="before-box"><strong>Before this feature:</strong> The checkout was a 4-screen wizard (Review → Details → Eligibility → Payment). Each additional screen loses approximately 20% of guests.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">5.2</span><h3>Nationality-Aware Eligibility Checker</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Searchable dropdown of all countries in the checkout. When an Arab-national country is selected, a real-time notice explains exactly what documents may be needed.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Proactively handling the most common booking failure point — turned away at check-in due to missing documents — reduces chargebacks, complaints, and negative reviews.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">5.3</span><h3>Card &amp; Bank Transfer Payment Options</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Guests choose between Stripe card payment or Egyptian bank transfer. Bank transfer shows full account details and WhatsApp confirmation instructions.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Many high-value guests in Egypt prefer bank transfer over online card payment. Offering both removes a significant payment-preference barrier.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">5.4</span><h3>Booking Confirmation Page</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>After booking, guests see a branded confirmation page with booking reference, property summary, check-in instructions, and a WhatsApp support button.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Reduces "did my booking go through?" support messages. Sets clear expectations, reducing check-in friction.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Accounts -->
+    <section class="feature-section" id="s6">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <h2>User Accounts &amp; Registration</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">6.1</span><h3>Full Registration &amp; Sign-In Portal</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what">
+            <div class="fc-label">What it does</div>
+            <ul>
+              <li>Email + password authentication</li>
+              <li>Google one-click sign-in (OAuth)</li>
+              <li>Live password strength validation</li>
+              <li>Branded two-column design matching site identity</li>
+            </ul>
+          </div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Registered users book at <strong>2×</strong> the rate of anonymous guests. Accounts enable loyalty, repeat bookings, saved preferences, and targeted email campaigns.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">6.2</span><h3>Protected Account Dashboard</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Private /account page showing the signed-in guest's full booking history — all past and upcoming stays in one place.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Self-service booking history reduces support load. Guests who can see their own bookings call and message less. Creates natural repeat-booking touchpoints.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">6.3</span><h3>Session-Aware Navigation</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>The header automatically shows "My Account" when signed in and "Sign In" when not. The account link goes directly to the dashboard.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Anonymous guests are prompted toward registration at every session — growing the registered user base passively, with zero marketing spend.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Bilingual -->
+    <section class="feature-section" id="s7">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <h2>Bilingual Support (Arabic / English)</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">7.1</span><h3>Full Arabic Translation</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Every page is fully translated into Arabic. The site detects language preference and routes to /ar/... All UI copy, property descriptions, filters, and error messages are available in both languages.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>A large share of Verdnest's target market is Arabic-speaking. A site that feels native in Arabic converts at dramatically higher rates. Few local competitors offer a polished Arabic experience.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">7.2</span><h3>RTL Layout Support</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>The Arabic version renders in right-to-left layout. All typography, navigation, and components are mirrored correctly.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Arabic users immediately abandon sites with broken RTL. Correct RTL signals that the site was built for them — not retrofitted as an afterthought.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Security -->
+    <section class="feature-section" id="s8">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <h2>Security (Infrastructure)</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">8.1</span><h3>Content Security Policy (CSP)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Every HTTP response includes a policy explicitly allowlisting which external services can load scripts (Stripe, Google, Vercel, Mapbox). Any foreign script injection is blocked automatically.</p></div>
+          <div class="fc-value"><div class="fc-label">Risk reduction</div><p>Eliminates XSS and Magecart-style card skimming attacks. PCI DSS and most cyber insurance policies now require or recommend CSP for e-commerce sites.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">8.2</span><h3>HTTPS Enforcement (HSTS)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Strict-Transport-Security header forces all connections to HTTPS for 2 years, even if a user types "http://". Submitted for browser HSTS preload lists.</p></div>
+          <div class="fc-value"><div class="fc-label">Risk reduction</div><p>Prevents downgrade attacks and man-in-the-middle interception of payment data. Required for PCI compliance.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">8.3</span><h3>Clickjacking Protection</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>X-Frame-Options: DENY prevents the site from being embedded in an iframe on a third-party page.</p></div>
+          <div class="fc-value"><div class="fc-label">Risk reduction</div><p>Blocks UI redress attacks where a malicious site overlays a transparent Verdnest booking form to steal credentials or payments.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">8.4</span><h3>Row-Level Security on Database</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>All 8 database tables have RLS enabled. Without an explicit access policy, no data is accessible through the public API layer.</p></div>
+          <div class="fc-value"><div class="fc-label">Risk reduction</div><p>Even if a bug exposes an API endpoint, an attacker cannot read other users' bookings, payment records, or personal data. Fundamental data protection.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">8.5</span><h3>Secure Password Storage (scrypt)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Passwords hashed using scrypt (NIST-recommended). Comparison uses constant-time verification to prevent timing attacks.</p></div>
+          <div class="fc-value"><div class="fc-label">Risk reduction</div><p>If the database is ever compromised, stolen hashes cannot be reversed. Protects users who reuse passwords across sites.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">8.6</span><h3>Rate Limiting on Authentication</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Registration and sign-in endpoints limit attempts per IP address within a time window. Registration never reveals whether an email already exists.</p></div>
+          <div class="fc-value"><div class="fc-label">Risk reduction</div><p>Blocks credential-stuffing and brute-force attacks. Protects guest accounts and Verdnest's platform reputation.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. SEO -->
+    <section class="feature-section" id="s9">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <h2>SEO &amp; Performance</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">9.1</span><h3>Open Graph &amp; Social Cards</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Every page has correctly configured Open Graph and Twitter Card metadata. Sharing a Verdnest link on WhatsApp, Facebook, or LinkedIn shows a photo, title, and description automatically.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>WhatsApp sharing is the primary discovery channel for many Egyptian property seekers. A rich preview card dramatically increases click-through versus a bare URL.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">9.2</span><h3>Structured Data (Schema.org)</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Homepage and listing pages emit JSON-LD markup that Google reads to generate rich search results showing prices, ratings, and property details.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Rich snippets increase organic click-through rates by <strong>20–30%</strong> at zero cost. This compounds — better CTR improves ranking, which improves CTR further.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">9.3</span><h3>Optimised Images &amp; Fonts</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>All images use Next.js Image (WebP conversion, lazy loading, correct sizing). Fonts are subset and served from the CDN edge.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Core Web Vitals are a direct Google ranking factor. Fast-loading pages rank higher and convert better — particularly on mobile connections in Egypt.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Blog -->
+    <section class="feature-section" id="s10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <h2>Blog &amp; Content</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">10.1</span><h3>Blog with AI Chatbot</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Full blog system with category pages and individual articles. An AI chatbot (Nesty) on the blog proactively recommends relevant articles based on the user's trip plans.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>SEO content drives free organic traffic for high-intent searches ("best chalets North Coast Egypt 2026"). The chatbot converts blog readers into listing browsers.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Backend -->
+    <section class="feature-section" id="s11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <h2>Backend &amp; Admin</h2>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">11.1</span><h3>Full Admin API</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>Protected admin endpoints for dashboard analytics, listing management (create/update/delete), and booking oversight.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Gives the operations team tools to manage inventory without touching the database directly. Reduces technical dependency for day-to-day operations.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">11.2</span><h3>Complete REST API Layer</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>All site functionality is backed by a full API: listings search, individual listing, reviews, availability calendar, bookings, payments, contact form, and chat.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>API-first architecture means a mobile app, WhatsApp chatbot, or third-party integration can be added later without rebuilding the backend.</p></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-head"><span class="feature-num">11.3</span><h3>Stripe Webhook Handler</h3></div>
+        <div class="feature-card-body">
+          <div class="fc-what"><div class="fc-label">What it does</div><p>A secure webhook endpoint that receives payment confirmation events directly from Stripe and automatically updates booking status server-side.</p></div>
+          <div class="fc-value"><div class="fc-label">Business value</div><p>Bookings confirmed by Stripe's infrastructure — not by the frontend. Prevents fraud where a user manipulates the browser to skip the payment step.</p></div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /page-body -->
+
+  <div class="page-footer">
+    <span>Verdnest Website — Complete Feature List &amp; Business Value · June 2026</span>
+    <span>For questions or a live demo, contact Moataz Samir</span>
+  </div>
+
+</div>
+</body>
+</html>

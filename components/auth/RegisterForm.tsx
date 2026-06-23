@@ -17,6 +17,7 @@ export default function RegisterForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
+  const [showRequirements, setShowRequirements] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -103,6 +104,8 @@ export default function RegisterForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onFocus={() => setShowRequirements(true)}
+            onBlur={() => setShowRequirements(false)}
             className="w-full rounded-btn border border-gray-200 px-4 py-3 pr-11 text-ink focus:border-orange focus:ring-2 focus:ring-orange/20 focus:outline-none transition"
             placeholder="Create a strong password"
           />
@@ -114,21 +117,26 @@ export default function RegisterForm() {
           >
             {showPw ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
-        </div>
 
-        <ul className="grid grid-cols-2 gap-1.5 mt-3">
-          {rules.map((r) => {
-            const ok = r.test(password)
-            return (
-              <li key={r.label} className={`flex items-center gap-1.5 text-xs transition-colors ${ok ? 'text-green' : 'text-ink/40'}`}>
-                <span className={`flex items-center justify-center w-4 h-4 rounded-full transition-colors ${ok ? 'bg-green text-white' : 'bg-gray-200'}`}>
-                  {ok && <Check className="w-3 h-3" />}
-                </span>
-                {r.label}
-              </li>
-            )
-          })}
-        </ul>
+          {showRequirements && (
+            <div className="absolute z-20 left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 p-4">
+              <p className="text-xs font-semibold text-ink/60 uppercase tracking-wide mb-2.5">Password requirements</p>
+              <ul className="space-y-2">
+                {rules.map((r) => {
+                  const ok = r.test(password)
+                  return (
+                    <li key={r.label} className={`flex items-center gap-2 text-sm transition-colors ${ok ? 'text-green' : 'text-ink/50'}`}>
+                      <span className={`flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0 transition-colors ${ok ? 'bg-green text-white' : 'bg-gray-100'}`}>
+                        {ok && <Check className="w-3 h-3" />}
+                      </span>
+                      {r.label}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
 
       <button

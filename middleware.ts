@@ -7,12 +7,9 @@ import { NextResponse, type NextRequest } from 'next/server'
 // Allowed third parties: Stripe (payments), Mapbox (maps), Google (OAuth +
 // avatars + fonts), Unsplash (listing imagery), Vercel (analytics/speed-insights).
 export function middleware(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-
   const csp = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' https://js.stripe.com https://va.vercel-scripts.com`,
-    // 'unsafe-inline' for styles only (Next injects inline <style>); ignored for scripts when a nonce is present.
+    `script-src 'self' 'unsafe-inline' https://js.stripe.com https://va.vercel-scripts.com`,
     `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
     `font-src 'self' https://fonts.gstatic.com data:`,
     `img-src 'self' data: blob: https://images.unsplash.com https://plus.unsplash.com https://lh3.googleusercontent.com https://*.mapbox.com https://*.tiles.mapbox.com`,
@@ -27,7 +24,6 @@ export function middleware(request: NextRequest) {
   ].join('; ')
 
   const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-nonce', nonce)
   requestHeaders.set('Content-Security-Policy', csp)
 
   const response = NextResponse.next({ request: { headers: requestHeaders } })

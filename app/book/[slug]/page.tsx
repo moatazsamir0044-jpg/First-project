@@ -1,11 +1,11 @@
 'use client'
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, notFound } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/layout/Header'
 import QuickCheckout from '@/components/booking/QuickCheckout'
 import BookingConfirmed from '@/components/booking/BookingConfirmed'
-import { mockListings } from '@/lib/mock-data'
+import { type Listing } from '@/lib/mock-data'
 import { calculateNights, generateBookingRef } from '@/lib/formatters'
 
 interface CheckoutData {
@@ -17,7 +17,8 @@ interface CheckoutData {
 }
 
 function BookingFlow({ slug }: { slug: string }) {
-  const listing = mockListings.find(l => l.slug === slug)
+  const [listing, setListing] = useState<Listing | null>(null)
+  const [loading, setLoading] = useState(true)
   const searchParams = useSearchParams()
   const checkIn = searchParams.get('checkIn') || ''
   const checkOut = searchParams.get('checkOut') || ''
@@ -26,6 +27,21 @@ function BookingFlow({ slug }: { slug: string }) {
   const [done, setDone] = useState(false)
   const [details, setDetails] = useState<CheckoutData | null>(null)
   const [bookingRef] = useState(generateBookingRef())
+
+  useEffect(() => {
+    fetch(`/api/listings/${slug}`)
+      .then(r => r.ok ? r.json() : null)
+      .then((data: Listing | null) => { setListing(data); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [slug])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[var(--color-accent-primary)] border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
 
   if (!listing) return notFound()
 

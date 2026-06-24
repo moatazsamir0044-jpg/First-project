@@ -3,26 +3,27 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, SlidersHorizontal } from 'lucide-react'
 import ListingCard from '@/components/listings/ListingCard'
-import { mockListings } from '@/lib/mock-data'
+import type { Listing } from '@/lib/mock-data'
 
 const LOCATIONS = ['New Cairo', 'North Coast', 'El Gouna', 'Sheikh Zayed']
 const AMENITIES = ['Pool', 'Gym', 'Beach Access', 'Beachfront', 'Workspace', 'Parking', 'Sea View', 'Kids Area', 'BBQ', 'Pet Friendly']
 
 interface ListingsClientProps {
+  listings: Listing[]
   defaultLocation: string
   defaultCheckIn: string
   defaultCheckOut: string
   defaultGuests: number
 }
 
-export default function ListingsClient({ defaultLocation, defaultCheckIn, defaultCheckOut, defaultGuests }: ListingsClientProps) {
+export default function ListingsClient({ listings, defaultLocation, defaultCheckIn, defaultCheckOut, defaultGuests }: ListingsClientProps) {
   const router = useRouter()
 
   const [location, setLocation] = useState(defaultLocation)
   const [checkIn, setCheckIn] = useState(defaultCheckIn)
   const [checkOut, setCheckOut] = useState(defaultCheckOut)
   const [guests, setGuests] = useState(defaultGuests)
-  const [maxPrice, setMaxPrice] = useState(10000)
+  const [maxPrice, setMaxPrice] = useState(15000)
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([])
   const [sortBy, setSortBy] = useState('popular')
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -40,7 +41,7 @@ export default function ListingsClient({ defaultLocation, defaultCheckIn, defaul
     )
   }
 
-  let filtered = mockListings.filter(l => {
+  let filtered = listings.filter(l => {
     if (location && !l.area.toLowerCase().includes(location.toLowerCase()) &&
         !l.location.toLowerCase().includes(location.toLowerCase())) return false
     if (guests && l.maxGuests < guests) return false
@@ -62,7 +63,6 @@ export default function ListingsClient({ defaultLocation, defaultCheckIn, defaul
 
   return (
     <main className="min-h-screen bg-[var(--color-ground)]">
-      {/* Page header */}
       <div className="bg-white border-b border-[#e6dbcf] py-8">
         <div className="container-site">
           <h1
@@ -80,7 +80,6 @@ export default function ListingsClient({ defaultLocation, defaultCheckIn, defaul
       </div>
 
       <div className="container-site py-8">
-        {/* Mobile filter toggle */}
         <button
           className="lg:hidden w-full flex items-center justify-between bg-white border border-gray-200 rounded-btn px-4 py-3 text-sm font-semibold text-[var(--color-text)] mb-4"
           onClick={() => setFiltersOpen(o => !o)}
@@ -94,7 +93,6 @@ export default function ListingsClient({ defaultLocation, defaultCheckIn, defaul
         </button>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
           <aside className={`lg:w-72 shrink-0 ${filtersOpen ? 'block' : 'hidden'} lg:block`}>
             <div className="bg-white rounded-card border border-gray-100 p-6 space-y-6 lg:sticky lg:top-24">
               <div>
@@ -164,8 +162,8 @@ export default function ListingsClient({ defaultLocation, defaultCheckIn, defaul
                 <input
                   type="range"
                   min={500}
-                  max={10000}
-                  step={100}
+                  max={15000}
+                  step={500}
                   value={maxPrice}
                   onChange={e => setMaxPrice(Number(e.target.value))}
                   className="w-full accent-[var(--color-accent-primary)]"
@@ -208,7 +206,6 @@ export default function ListingsClient({ defaultLocation, defaultCheckIn, defaul
             </div>
           </aside>
 
-          {/* Results */}
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6">
               <p className="text-sm text-[var(--color-text)]/60 font-medium">

@@ -21,11 +21,11 @@ export type Listing = {
   refundPolicy: string
   eligibility: string
   isActive: boolean
-  lastBooked: Date | null
+  lastBooked: Date | string | null
   viewCount: number
   latitude: number | null
   longitude: number | null
-  createdAt: Date
+  createdAt: Date | string
   unitCode?: string
   view?: string
   sizeSqm?: number | null
@@ -43,7 +43,7 @@ export type Review = {
   rating: number
   comment: string
   source: string
-  createdAt: Date
+  createdAt: Date | string
 }
 
 export const mockListings: Listing[] = []
